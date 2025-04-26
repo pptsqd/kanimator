@@ -1,0 +1,8 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://d0p5blc7xq6sq"]
+
+[ext_resource type="StyleBox" uid="uid://wwlr2r4q0wjm" path="res://ui/keyframe_set_flatbox.tres" id="1_gw6os"]
+
+[resource]
+CheckButton/styles/normal = ExtResource("1_gw6os")
+CheckButton/styles/pressed = ExtResource("1_gw6os")
+LineEdit/styles/normal = ExtResource("1_gw6os")

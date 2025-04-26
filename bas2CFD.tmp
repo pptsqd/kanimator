@@ -1,0 +1,243 @@
+[gd_scene load_steps=13 format=3 uid="uid://c0arxokk22fw"]
+
+[ext_resource type="Script" path="res://scripts/build_holder.gd" id="1_hcp24"]
+[ext_resource type="Script" path="res://scripts/root.gd" id="1_i5rqx"]
+[ext_resource type="Texture2D" uid="uid://xkddrxhcffig" path="res://icon.svg" id="1_kc83b"]
+[ext_resource type="Script" path="res://scripts/kanim_sprite.gd" id="3_q83om"]
+[ext_resource type="Script" path="res://element_selector.gd" id="6_2qt1v"]
+[ext_resource type="PackedScene" uid="uid://bc31yvngmuab4" path="res://element_button.tscn" id="6_f73j4"]
+[ext_resource type="Script" path="res://scripts/animation_master.gd" id="7_1dh4q"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_01ks7"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_kc83b")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="Animation" id="Animation_ogoeu"]
+resource_name = "new_animation"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_exo3o"]
+_data = {
+"new_animation": SubResource("Animation_ogoeu")
+}
+
+[sub_resource type="Curve" id="Curve_7c2w4"]
+_data = [Vector2(0, 0.5), 0.0, -2.54167, 0, 1, Vector2(0.196721, 0), -2.54167, 1.64865, 1, 1, Vector2(0.5, 0.5), 0.338841, 0.0, 0, 0, Vector2(0.8, 0), 0.0, 0.0, 0, 0, Vector2(1, 0.5), 0.0, 0.0, 0, 0]
+point_count = 5
+metadata/_snap_enabled = true
+
+[sub_resource type="CurveTexture" id="CurveTexture_t7twf"]
+curve = SubResource("Curve_7c2w4")
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_i5rqx")
+
+[node name="Button" type="Button" parent="."]
+offset_left = 13.0
+offset_top = 13.0
+offset_right = 182.0
+offset_bottom = 58.0
+text = "LOAD BUILD"
+
+[node name="Button2" type="Button" parent="."]
+offset_left = 189.0
+offset_top = 13.0
+offset_right = 358.0
+offset_bottom = 58.0
+text = "LOAD ANIMS"
+
+[node name="FileDialog" type="FileDialog" parent="."]
+unique_name_in_owner = true
+title = "Open a File"
+initial_position = 1
+size = Vector2i(600, 300)
+ok_button_text = "Open"
+dialog_hide_on_ok = true
+file_mode = 0
+access = 2
+filters = PackedStringArray("build.xml", "*.xml")
+use_native_dialog = true
+
+[node name="AnimDialogue" type="FileDialog" parent="."]
+unique_name_in_owner = true
+auto_translate_mode = 1
+title = "Open a File"
+initial_position = 1
+size = Vector2i(600, 300)
+ok_button_text = "Open"
+dialog_hide_on_ok = true
+file_mode = 0
+access = 2
+filters = PackedStringArray("animation.xml", "*.xml")
+use_native_dialog = true
+
+[node name="AnimDialogue2" type="FileDialog" parent="."]
+unique_name_in_owner = true
+auto_translate_mode = 1
+initial_position = 1
+size = Vector2i(600, 300)
+visible = true
+ok_button_text = "Save"
+dialog_hide_on_ok = true
+access = 2
+filters = PackedStringArray("animation.xml", "*.xml")
+use_native_dialog = true
+
+[node name="kanimaViewer" type="Window" parent="."]
+title = "KANIM Viewer"
+position = Vector2i(25, 100)
+size = Vector2i(300, 300)
+always_on_top = true
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="kanimaViewer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="kanimaViewer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="kanimaViewer/HBoxContainer2/HBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Control" type="Control" parent="kanimaViewer/HBoxContainer2/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Sprite_Origin" type="Node2D" parent="kanimaViewer/HBoxContainer2/HBoxContainer/VBoxContainer/Control"]
+unique_name_in_owner = true
+scale = Vector2(0.5, 0.5)
+script = ExtResource("1_hcp24")
+
+[node name="KANIMSprite" type="AnimatedSprite2D" parent="kanimaViewer/HBoxContainer2/HBoxContainer/VBoxContainer/Control/Sprite_Origin"]
+sprite_frames = SubResource("SpriteFrames_01ks7")
+script = ExtResource("3_q83om")
+
+[node name="Sprite2D" type="Sprite2D" parent="kanimaViewer/HBoxContainer2/HBoxContainer/VBoxContainer/Control/Sprite_Origin"]
+unique_name_in_owner = true
+
+[node name="AnimationTree" type="AnimationTree" parent="kanimaViewer/HBoxContainer2/HBoxContainer/VBoxContainer/Control"]
+libraries = {
+"": SubResource("AnimationLibrary_exo3o")
+}
+
+[node name="Panel" type="Panel" parent="kanimaViewer/HBoxContainer2"]
+custom_minimum_size = Vector2(25, 0)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="kanimaViewer/HBoxContainer2/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="anim_resize" type="VSlider" parent="kanimaViewer/HBoxContainer2/Panel/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 10.0
+value = 50.0
+
+[node name="elemnt_sel" type="Window" parent="."]
+title = "Elements"
+position = Vector2i(375, 40)
+size = Vector2i(225, 350)
+always_on_top = true
+
+[node name="element_selector" type="Control" parent="elemnt_sel"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("6_2qt1v")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="elemnt_sel/element_selector"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="elemnt_sel/element_selector/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="element_button_holder" type="VBoxContainer" parent="elemnt_sel/element_selector/HBoxContainer/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="element_button" parent="elemnt_sel/element_selector/HBoxContainer/ScrollContainer/element_button_holder" instance=ExtResource("6_f73j4")]
+layout_mode = 2
+
+[node name="element_button2" parent="elemnt_sel/element_selector/HBoxContainer/ScrollContainer/element_button_holder" instance=ExtResource("6_f73j4")]
+layout_mode = 2
+
+[node name="element_button3" parent="elemnt_sel/element_selector/HBoxContainer/ScrollContainer/element_button_holder" instance=ExtResource("6_f73j4")]
+layout_mode = 2
+
+[node name="element_button9" parent="elemnt_sel/element_selector/HBoxContainer/ScrollContainer/element_button_holder" instance=ExtResource("6_f73j4")]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="elemnt_sel/element_selector/HBoxContainer"]
+custom_minimum_size = Vector2(5, 0)
+layout_mode = 2
+
+[node name="elemnt_sel2" type="Window" parent="."]
+auto_translate_mode = 1
+title = "Element Properties"
+position = Vector2i(650, 40)
+size = Vector2i(400, 350)
+always_on_top = true
+
+[node name="Window2" type="Window" parent="."]
+position = Vector2i(25, 444)
+size = Vector2i(600, 150)
+always_on_top = true
+
+[node name="Line2D" type="Line2D" parent="Window2"]
+visible = false
+points = PackedVector2Array(10, 20, 50, 50, 100, 20)
+width = 5.0
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="Window2"]
+visible = false
+texture = SubResource("CurveTexture_t7twf")
+
+[node name="animation_master" type="Control" parent="Window2"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("7_1dh4q")
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="Button2" to="." method="_on_load_anims_pressed"]
+[connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]
+[connection signal="file_selected" from="AnimDialogue" to="." method="_on_anim_dialogue_file_selected"]
+[connection signal="file_selected" from="AnimDialogue2" to="." method="_on_anim_dialogue_file_selected"]
+[connection signal="changed" from="kanimaViewer/HBoxContainer2/Panel/HBoxContainer/anim_resize" to="." method="_on_anim_resize_changed"]
+[connection signal="value_changed" from="kanimaViewer/HBoxContainer2/Panel/HBoxContainer/anim_resize" to="." method="_on_anim_resize_value_changed"]

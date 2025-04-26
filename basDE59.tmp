@@ -1,0 +1,89 @@
+[gd_scene load_steps=7 format=3 uid="uid://c0arxokk22fw"]
+
+[ext_resource type="Script" path="res://scripts/build_holder.gd" id="1_hcp24"]
+[ext_resource type="Script" path="res://scripts/root.gd" id="1_i5rqx"]
+[ext_resource type="Texture2D" uid="uid://xkddrxhcffig" path="res://icon.svg" id="1_kc83b"]
+[ext_resource type="Texture2D" uid="uid://dxrfvfp78fbtq" path="res://red_dot-0.png" id="2_sm3pi"]
+[ext_resource type="Script" path="res://scripts/kanim_sprite.gd" id="3_q83om"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_01ks7"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_kc83b")
+}, {
+"duration": 1.0,
+"texture": ExtResource("1_kc83b")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_sm3pi")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_i5rqx")
+
+[node name="Button" type="Button" parent="."]
+offset_right = 169.0
+offset_bottom = 45.0
+text = "LOAD"
+
+[node name="FileDialog" type="FileDialog" parent="."]
+unique_name_in_owner = true
+title = "Open a File"
+initial_position = 1
+size = Vector2i(600, 300)
+ok_button_text = "Open"
+dialog_hide_on_ok = true
+file_mode = 0
+access = 2
+use_native_dialog = true
+
+[node name="Window" type="Window" parent="."]
+position = Vector2i(20, 45)
+size = Vector2i(300, 300)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Window"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 2
+
+[node name="VSlider" type="VSlider" parent="Window/HBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Window"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Window/HBoxContainer2"]
+layout_mode = 2
+alignment = 1
+
+[node name="Control" type="Control" parent="Window/HBoxContainer2/VBoxContainer"]
+layout_mode = 2
+
+[node name="Sprite_Origin" type="Node2D" parent="Window/HBoxContainer2/VBoxContainer/Control"]
+unique_name_in_owner = true
+script = ExtResource("1_hcp24")
+
+[node name="KANIMSprite" type="AnimatedSprite2D" parent="Window/HBoxContainer2/VBoxContainer/Control/Sprite_Origin"]
+sprite_frames = SubResource("SpriteFrames_01ks7")
+frame = 2
+script = ExtResource("3_q83om")
+
+[node name="Sprite2D" type="Sprite2D" parent="Window/HBoxContainer2/VBoxContainer/Control/Sprite_Origin"]
+unique_name_in_owner = true
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
+[connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]
