@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://c0arxokk22fw"]
+[gd_scene load_steps=24 format=3 uid="uid://c0arxokk22fw"]
 
 [ext_resource type="Script" path="res://scripts/build_holder.gd" id="1_hcp24"]
 [ext_resource type="Script" path="res://scripts/root.gd" id="1_i5rqx"]
@@ -42,6 +42,14 @@ corner_radius_bottom_left = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_capjk"]
 bg_color = Color(0.12549, 0.12549, 0.12549, 0.392157)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n8ec3"]
+bg_color = Color(0.176471, 0.176471, 0.176471, 1)
+border_color = Color(0.254902, 0.254902, 0.254902, 1)
 corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
@@ -161,6 +169,7 @@ zoom = Vector2(0.5, 0.5)
 
 [node name="Sprite2D" type="Sprite2D" parent="SubViewport"]
 modulate = Color(1, 1, 1, 0.219608)
+z_index = -500
 texture = ExtResource("5_hooqk")
 
 [node name="kanim_root" type="Node2D" parent="SubViewport"]
@@ -531,19 +540,13 @@ offset_right = 188.0
 offset_bottom = 136.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="keyframe_attrs/keyframe_inspector/VBoxContainer"]
+visible = false
 layout_mode = 2
 
 [node name="kf_element_name" type="Label" parent="keyframe_attrs/keyframe_inspector/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Attribute:"
-
-[node name="kf_ele_selector" type="OptionButton" parent="keyframe_attrs/keyframe_inspector/VBoxContainer/HBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-selected = 0
-item_count = 1
-popup/item_0/text = "Position X"
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="keyframe_attrs/keyframe_inspector/VBoxContainer"]
 layout_mode = 2
@@ -553,27 +556,39 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "< key"
 
-[node name="kf_num" type="Label" parent="keyframe_attrs/keyframe_inspector/VBoxContainer/HBoxContainer3"]
+[node name="kf_ele_selector" type="OptionButton" parent="keyframe_attrs/keyframe_inspector/VBoxContainer/HBoxContainer3"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(30, 0)
+custom_minimum_size = Vector2(125, 0)
 layout_mode = 2
-text = "000"
-horizontal_alignment = 1
+alignment = 1
+selected = 0
 
 [node name="kf_next" type="Button" parent="keyframe_attrs/keyframe_inspector/VBoxContainer/HBoxContainer3"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "key >"
 
-[node name="kf_easing_sel" type="OptionButton" parent="keyframe_attrs/keyframe_inspector/VBoxContainer"]
+[node name="HBoxContainer4" type="HBoxContainer" parent="keyframe_attrs/keyframe_inspector/VBoxContainer"]
+layout_mode = 2
+
+[node name="kf_num" type="Label" parent="keyframe_attrs/keyframe_inspector/VBoxContainer/HBoxContainer4"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(75, 30)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_n8ec3")
+text = "000"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="kf_easing_sel" type="OptionButton" parent="keyframe_attrs/keyframe_inspector/VBoxContainer/HBoxContainer4"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 selected = 0
-item_count = 1
-popup/item_0/text = "ease"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="keyframe_attrs/keyframe_inspector/VBoxContainer"]
 layout_mode = 2
+alignment = 1
 
 [node name="kf_update" type="Button" parent="keyframe_attrs/keyframe_inspector/VBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true
@@ -609,6 +624,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+alignment = 1
 
 [node name="Control" type="Control" parent="keyframe_vis/VBoxContainer"]
 custom_minimum_size = Vector2(0, 5)
@@ -622,8 +638,8 @@ size_flags_vertical = 3
 custom_minimum_size = Vector2(5, 0)
 layout_mode = 2
 
-[node name="Panel" type="Panel" parent="keyframe_vis/VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(0, 50)
+[node name="keyframe_visualiser" type="Panel" parent="keyframe_vis/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
 size_flags_horizontal = 3
 script = ExtResource("10_n8vv6")
@@ -899,15 +915,25 @@ use_native_dialog = true
 [connection signal="value_changed" from="elemnt_props/element_inspector/VBoxContainer/GridContainer/Control3/spin_idx" to="elemnt_props/element_inspector" method="_on_spin_idx_value_changed"]
 [connection signal="toggled" from="elemnt_props/element_inspector/VBoxContainer/GridContainer/Control3/chk_vis" to="elemnt_props/element_inspector" method="_on_chk_vis_toggled"]
 [connection signal="item_selected" from="elemnt_props/element_inspector/VBoxContainer/GridContainer/Control4/parentselector" to="elemnt_props/element_inspector" method="_on_parent_selector_item_selected"]
+[connection signal="pressed" from="keyframe_attrs/keyframe_inspector/VBoxContainer/HBoxContainer3/kf_latest" to="keyframe_attrs/keyframe_inspector" method="_on_kf_latest_pressed"]
+[connection signal="item_selected" from="keyframe_attrs/keyframe_inspector/VBoxContainer/HBoxContainer3/kf_ele_selector" to="keyframe_attrs/keyframe_inspector" method="_on_kf_ele_selector_item_selected"]
+[connection signal="pressed" from="keyframe_attrs/keyframe_inspector/VBoxContainer/HBoxContainer3/kf_next" to="keyframe_attrs/keyframe_inspector" method="_on_kf_next_pressed"]
+[connection signal="pressed" from="keyframe_attrs/keyframe_inspector/VBoxContainer/HBoxContainer2/kf_update" to="keyframe_attrs/keyframe_inspector" method="_on_kf_update_pressed"]
+[connection signal="pressed" from="keyframe_attrs/keyframe_inspector/VBoxContainer/HBoxContainer2/kf_delete" to="keyframe_attrs/keyframe_inspector" method="_on_kf_delete_pressed"]
 [connection signal="item_selected" from="animationsEditor/animation_master/VBoxContainer/HBoxContainer3/OptionButton" to="animationsEditor/animation_master" method="_on_baked_anim_selected"]
 [connection signal="pressed" from="animationsEditor/animation_master/VBoxContainer/kf_controls/baked_bwd" to="animationsEditor/animation_master" method="_on_baked_bwd_pressed"]
 [connection signal="pressed" from="animationsEditor/animation_master/VBoxContainer/kf_controls/bkd_Apply" to="animationsEditor/animation_master" method="_on_apply_pressed"]
 [connection signal="pressed" from="animationsEditor/animation_master/VBoxContainer/kf_controls/baked_fwd" to="animationsEditor/animation_master" method="_on_baked_fwd_pressed"]
 [connection signal="pressed" from="animationsEditor/animation_master/VBoxContainer/kf_controls/baked_play" to="animationsEditor/animation_master" method="_on_baked_play_pressed"]
 [connection signal="pressed" from="keyframesEditor/keyframes_master/Apply" to="keyframesEditor/keyframes_master" method="_on_apply_pressed"]
+[connection signal="item_selected" from="keyframesEditor/keyframes_master/VBoxContainer/HBoxContainer3/keyframeanim_selector" to="keyframesEditor/keyframes_master" method="_on_keyframeanim_selector_item_selected"]
 [connection signal="text_submitted" from="keyframesEditor/keyframes_master/VBoxContainer/HBoxContainer3/newAnimName" to="keyframesEditor/keyframes_master" method="_on_new_animname_text_submitted"]
 [connection signal="value_changed" from="keyframesEditor/keyframes_master/VBoxContainer/kfa_bounds/kfa_numFrameSpin" to="keyframesEditor/keyframes_master" method="_on_kfa_num_frame_spin_value_changed"]
 [connection signal="value_changed" from="keyframesEditor/keyframes_master/VBoxContainer/kfa_bounds/kfa_frameRateSpin" to="keyframesEditor/keyframes_master" method="_on_kfa_frame_rate_spin_value_changed"]
+[connection signal="value_changed" from="keyframesEditor/keyframes_master/VBoxContainer/kfa_controls/kfa_framecount" to="keyframesEditor/keyframes_master" method="_on_kfa_framecount_value_changed"]
+[connection signal="pressed" from="keyframesEditor/keyframes_master/VBoxContainer/kfa_controls/kfm_bwd" to="keyframesEditor/keyframes_master" method="_on_kfm_bwd_pressed"]
+[connection signal="pressed" from="keyframesEditor/keyframes_master/VBoxContainer/kfa_controls/kfm_Apply" to="keyframesEditor/keyframes_master" method="_on_kfm_apply_pressed"]
+[connection signal="pressed" from="keyframesEditor/keyframes_master/VBoxContainer/kfa_controls/kfm_fwd" to="keyframesEditor/keyframes_master" method="_on_kfm_fwd_pressed"]
 [connection signal="pressed" from="keyframesEditor/keyframes_master/VBoxContainer/kfa_controls/kfa_play" to="keyframesEditor/keyframes_master" method="_on_kfa_play_pressed"]
 [connection signal="pressed" from="keyframesEditor/keyframes_master/VBoxContainer/kfa_tools/set_global_kf" to="keyframesEditor/keyframes_master" method="_on_set_global_kf_pressed"]
 [connection signal="file_selected" from="SaveDialogue" to="animationsEditor/animation_master" method="_on_save_dialogue_file_selected"]

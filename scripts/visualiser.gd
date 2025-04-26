@@ -9,9 +9,9 @@ func _draw():
 		var modi = size.y
 		var y_offset = modi * 0.5 # to show pos an neg
 		var x_mod = size.x / numframes
-		var y_mod = size.y * 0.05
-		var attribute = "rot"
-		var bounds = 1
+		var y_mod = size.y * 0.5
+		var attribute = GAME.current_focus_attr
+		
 		
 		#drawing the Ui basics
 		for i in numframes:
@@ -32,21 +32,50 @@ func _draw():
 			else:
 				return 0
 			#now we know we have data we can draw it
+			var bounds_low : float
+			var bounds_high : float
+			var bounds_set = false
 			for frame in kf_data:
-				if abs(kf_data[frame].value) > bounds:
-					bounds = abs(kf_data[frame].value)
-					y_mod = size.y / (bounds+1)
-					y_mod *= 0.5 #we're making the data fit the screen here
-			for i in numframes: #draw dataline
+				if not bounds_set:
+					bounds_set = true
+					bounds_low = (kf_data[frame].value)
+					bounds_high = (kf_data[frame].value)
+				if (kf_data[frame].value) > bounds_high:
+					bounds_high = (kf_data[frame].value)
+				if (kf_data[frame].value) < bounds_low:
+					bounds_low = (kf_data[frame].value)
+			var bounds = bounds_high - bounds_low
+			y_mod = size.y / (bounds+0.10)
+			y_mod *= 0.75 #we're making the data fit the screen here
+			y_offset = y_offset + ( (((bounds_high+bounds_low)*0.5)) * y_mod)
+			if attribute == "vis":
+				y_mod = size.y * 0.5
+				y_offset = size.y * 0.75
+				draw_line(Vector2(0, y_mod), Vector2(size.x, y_mod),  Color.DIM_GRAY) 
+				# attr is binary so we can make this way easier to read; if val is above center-line it's on
+			elif attribute == "pos_y":
+				#gross but i'm manually flipping all pos_y values for UX reasons
+				y_mod = y_mod*-1
+				y_offset = (modi * 0.5) + ( (((bounds_high+bounds_low)*0.5)) * y_mod)
+			for i in numframes+1: #draw dataline
 				var key_in = i*x_mod
-				var kfdata_in = GAME.keyframes_master.get_kfa_data(target_name, attribute, i) 
+				var kfdata_in = -GAME.keyframes_master.get_kfa_data(target_name, attribute, i) 
 				kfdata_in *= y_mod
 				kfdata_in += y_offset #draw in middle of framge
+				
 				var key_out = (i+1)*x_mod
-				var kfdata_out = GAME.keyframes_master.get_kfa_data(target_name, attribute, i+1) 
+				var kfdata_out = -GAME.keyframes_master.get_kfa_data(target_name, attribute, i+1) 
 				kfdata_out *= y_mod
 				kfdata_out += y_offset
+				
 				draw_line(Vector2(key_in, kfdata_in), Vector2(key_out, kfdata_out), Color.WHITE_SMOKE, 0.5, true)
+				
+				if attribute == "idx":
+					kfdata_in = round(-GAME.keyframes_master.get_kfa_data(target_name, attribute, i) )
+					kfdata_in *= y_mod
+					kfdata_in += y_offset
+					draw_line(Vector2(key_in, kfdata_in), Vector2(key_out, kfdata_in), Color(0.5,.5,.5,.5), 0.5, true)
+					#drawing the stepped keys in!
 				if kf_data.has(i):
 					draw_line(Vector2(key_in, (kfdata_in) + 2.5 ), Vector2(key_in, (kfdata_in) - 2.5 ), Color.WHITE_SMOKE, 5)
 					#drawing a dot if this is a keyframe!

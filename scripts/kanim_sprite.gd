@@ -105,6 +105,6 @@ func set_from_kfa(frame_num, anim_name):
 		else:
 			scale.y = 1
 		if GAME.keyframe_data[anim_name][name].has("idx"):
-			set_frame( int(GAME.keyframes_master.get_kfa_data(name, "idx", frame_num)) )
+			set_frame( int(round(GAME.keyframes_master.get_kfa_data(name, "idx", frame_num))) )
 		if GAME.keyframe_data[anim_name][name].has("vis"):
-			set_sprite_vis( bool(floor(GAME.keyframes_master.get_kfa_data(name, "vis", frame_num))) )
+			set_sprite_vis( bool(round(GAME.keyframes_master.get_kfa_data(name, "vis", frame_num))) )

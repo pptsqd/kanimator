@@ -36,7 +36,7 @@ func change_target(new_target : KANIMSprite):
 func _process(delta):
 	if is_instance_valid(current_target):
 		spin_pos_x.set_value_no_signal(current_target.position.x)
-		spin_pos_y.set_value_no_signal(current_target.position.y)
+		spin_pos_y.set_value_no_signal(-current_target.position.y)
 		spin_rot.set_value_no_signal(current_target.rotation_degrees)
 		spin_scl_x.set_value_no_signal(current_target.scale.x)
 		spin_scl_y.set_value_no_signal(current_target.scale.y)
@@ -49,7 +49,7 @@ func _on_spin_pos_x_value_changed(value):
 		current_target.position.x = value
 func _on_spin_pos_y_value_changed(value):
 	if is_instance_valid(current_target):
-		current_target.position.y = value
+		current_target.position.y = -value
 
 func _on_spin_rot_value_changed(value):
 	if is_instance_valid(current_target):

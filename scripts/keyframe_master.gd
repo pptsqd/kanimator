@@ -2,7 +2,6 @@ class_name Keyframes_Master
 extends Control
 
 @onready var new_anim_name = %newAnimName
-const blend_types = ["linear", "ease_in_out", "stepped"]
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -29,17 +28,17 @@ func set_key_frame(n):
 	
 func _on_kfa_play_pressed():
 	playing = !playing
-	if playing: %kfa_play.text = "■"
-	else: %kfa_play.text = "▶"
 	
 
 func _process(delta):
 	if playing:
+		%kfa_play.text = "■"
 		playing_delta += delta
 		if playing_delta > (1.0/frame_rate):
 			set_key_frame(current_kfa_frame+1)
 			playing_delta -= 1.0/frame_rate
 			GAME.build_holder.load_kfa_frame(GAME.current_keyframe_animname, current_kfa_frame)
+	else: %kfa_play.text = "▶"
 
 	if new_anim_name.text == "":
 		# adding extra controls for the KFAs
@@ -55,7 +54,7 @@ func _process(delta):
 
 
 func _on_new_animname_text_submitted(new_text):
-	print(new_text)
+	#print(new_text)
 	new_anim_name.text = ""
 	if not GAME.keyframe_data.has(new_text):
 		GAME.keyframe_data[new_text] = {"numframes" : frame_count,"framerate" : frame_rate}
@@ -88,9 +87,11 @@ func create_keyframe_basis(node_name, animname):
 
 
 func edit_keyframe(node_name, attr_name, key_data, blend_type, key_num):
-	if str(blend_type) == "Delete":
-		GAME.keyframe_data[GAME.current_keyframe_animname][node_name][attr_name].erase_key(key_num)
-	GAME.keyframe_data[GAME.current_keyframe_animname][node_name][attr_name][key_num] = {"value" : key_data, "blend" : blend_type}
+	#print(blend_type)
+	if blend_type == -1:
+		GAME.keyframe_data[GAME.current_keyframe_animname][node_name][attr_name].erase(key_num)
+	else:
+		GAME.keyframe_data[GAME.current_keyframe_animname][node_name][attr_name][key_num] = {"value" : key_data, "blend" : blend_type}
 
 func set_keyframe(data):
 	var node_name = data.node_name
@@ -114,7 +115,7 @@ func set_keyframe(data):
 
 func _on_set_global_kf_pressed():
 	for node in GAME.build_holder.build_nodes:
-		set_keyframe({"node_name" : node.name, "pos_x" : 0, "pos_y" : 1, "rot" : 1, "scl_x" : 1, "scl_y" : 1, "idx" : 1, "vis" : 1})
+		set_keyframe({"node_name" : node.name, "pos_x" : 0, "pos_y" : 0, "rot" : 0, "scl_x" : 0, "scl_y" : 0, "idx" : 0, "vis" : 0})
 	#print(GAME.keyframe_data)
 
 
@@ -135,11 +136,46 @@ func get_kfa_data(node_name, attr_name, frame_num):
 	var keys_delta = 0
 	if (next_key_num - last_key_num) > 0:
 		keys_delta = ((float(frame_num) - last_key_num)) / ((next_key_num - last_key_num))
-	#keys_delta = EasingFunctions.ease_in_out_cubic(keys_delta)
+	if last_key_data["blend"]:
+		var blend_type = GAME.blend_types[last_key_data["blend"]]
+		if blend_type == "stepped":
+			keys_delta = 1.0
+		elif blend_type == "ease_i_o_cubic":
+			keys_delta = EasingFunctions.ease_in_out_cubic(keys_delta)
+		elif blend_type == "ease_in_out":
+			keys_delta = EasingFunctions.ease_in_out_quad(keys_delta)
+		elif blend_type == "ease_in":
+			keys_delta = EasingFunctions.ease_in_quad(keys_delta)
+		elif blend_type == "ease_out":
+			keys_delta = EasingFunctions.ease_out_quad(keys_delta)
+		elif blend_type == "ease_out_cubic":
+			keys_delta = EasingFunctions.ease_out_cubic(keys_delta)
+		elif blend_type == "ease_in_cubic":
+			keys_delta = EasingFunctions.ease_in_cubic(keys_delta)
 	var result_float = lerpf(last_key_data.value, next_key_data.value, keys_delta)
 	#result_float = EasingFunctions.quad_bezier(keys_delta,last_key_data.value,lerpf(last_key_data.value, next_key_data.value, 0.5),next_key_data.value)
 	#I think for this we need to find hypothetical key value if the line continued from previous two points
 	return result_float
+
+var focused_attribute = ""
+
+func go_to_prev_key(node_name, attr_name):
+	playing = false
+	if not (GAME.keyframe_data[GAME.current_keyframe_animname][node_name] and GAME.keyframe_data[GAME.current_keyframe_animname][node_name][attr_name]):
+		return 0
+	var raw_data = GAME.keyframe_data[GAME.current_keyframe_animname][node_name][attr_name]
+	var last_key_num = get_latest_key(raw_data, current_kfa_frame-1)
+	set_key_frame(last_key_num)
+	GAME.build_holder.load_kfa_frame(GAME.current_keyframe_animname, current_kfa_frame)
+	
+func go_to_next_key(node_name, attr_name):
+	playing = false
+	if not (GAME.keyframe_data[GAME.current_keyframe_animname][node_name] and GAME.keyframe_data[GAME.current_keyframe_animname][node_name][attr_name]):
+		return 0
+	var raw_data = GAME.keyframe_data[GAME.current_keyframe_animname][node_name][attr_name]
+	var next_key_num = get_next_key(raw_data, current_kfa_frame+1)
+	set_key_frame(next_key_num)
+	GAME.build_holder.load_kfa_frame(GAME.current_keyframe_animname, current_kfa_frame)
 
 func sort_keys(dict : Dictionary):
 	var keys = dict.keys()
@@ -152,7 +188,7 @@ func get_first_key(dict: Dictionary):
 	
 func get_last_key(dict: Dictionary):
 	var keys = sort_keys(dict)
-	print(keys[-1])
+	#print(keys[-1])
 	return keys[-1]
 
 func get_latest_key(dict, from):
@@ -178,11 +214,34 @@ func get_next_key(dict, from):
 	return keys[-1] # get the last keyframe
 
 
+
 func _on_kfa_num_frame_spin_value_changed(value):
 	frame_count = int(value)
-	GAME.keyframe_data[current_anim] = {"numframes" = frame_count}
+	GAME.keyframe_data[current_anim]["numframes"] = frame_count
 
 
 func _on_kfa_frame_rate_spin_value_changed(value):
 	frame_rate = int(value)
-	GAME.keyframe_data[current_anim] = {"framerate" = frame_rate}
+	GAME.keyframe_data[current_anim]["framerate"] = frame_rate
+
+func _on_kfa_framecount_value_changed(value):
+	current_kfa_frame = int(value)  #direct set, we bypass the limits here
+
+
+func _on_kfm_bwd_pressed():
+	playing = false
+	set_key_frame(current_kfa_frame-1)
+	GAME.build_holder.load_kfa_frame(GAME.current_keyframe_animname, current_kfa_frame)
+	
+
+func _on_kfm_apply_pressed():
+	GAME.build_holder.load_kfa_frame(GAME.current_keyframe_animname, current_kfa_frame)
+
+func _on_kfm_fwd_pressed():
+	playing = false
+	set_key_frame(current_kfa_frame+1)
+	GAME.build_holder.load_kfa_frame(GAME.current_keyframe_animname, current_kfa_frame)
+
+
+func _on_keyframeanim_selector_item_selected(index):
+	change_kfanim(%keyframeanim_selector.get_item_text(index))
