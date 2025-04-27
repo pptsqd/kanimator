@@ -61,7 +61,7 @@ static func linear( value: float) -> float:
 
 # Easing Stepped function
 static func stepped( value: float) -> float:
-	return 1
+	return 0
 	
 	
 static func quad_bezier(t: float, p0: float, p1: float, p2: float) -> float:

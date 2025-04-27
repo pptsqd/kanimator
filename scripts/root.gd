@@ -64,13 +64,6 @@ func _on_viewer_h_scroll_bar_value_changed(value):
 	kanim_rendercam.position.x = (value-50)*-5
 
 
-func _on_save_rig_dialogue_file_selected(path):
-	var save_file = FileAccess.open(path, FileAccess.WRITE)
-	if save_file == null:
-		print ("Error making save file ", FileAccess.get_open_error())
-	else:
-		var json_string = JSON.stringify(GAME.rig_data)
-		save_file.store_string(json_string)
 
 
 func _on_save_rig_pressed():
@@ -80,6 +73,13 @@ func _on_save_rig_pressed():
 func _on_load_rig_pressed():
 	%LoadRigDialogue.popup()
 
+func _on_save_rig_dialogue_file_selected(path):
+	var save_file = FileAccess.open(path, FileAccess.WRITE)
+	if save_file == null:
+		print ("Error making save file ", FileAccess.get_open_error())
+	else:
+		var json_string = JSON.stringify(GAME.rig_data)
+		save_file.store_string(json_string)
 
 func _on_load_rig_dialogue_file_selected(path):
 	if FileAccess.file_exists(path):
@@ -93,3 +93,37 @@ func _on_load_rig_dialogue_file_selected(path):
 		else:
 			print("JSON parse error; ", json.get_error_message())
 			
+
+
+func _on_load_keys_pressed():
+	%LoadKfasDialogue.popup()
+
+
+func _on_save_keys_pressed():
+	%SaveKfasDialogue.popup()
+
+func _on_save_kfas_dialogue_file_selected(path):
+	var save_file = FileAccess.open(path, FileAccess.WRITE)
+	if save_file == null:
+		print ("Error making save file ", FileAccess.get_open_error())
+	else:
+		var json_string = JSON.stringify(GAME.keyframe_data)
+		save_file.store_string(json_string)
+
+
+func _on_load_kfas_dialogue_file_selected(path):
+	if FileAccess.file_exists(path):
+		var save_file = FileAccess.open(path, FileAccess.READ)
+		var json_string = save_file.get_as_text()
+		var json = JSON.new()
+		var parse_result = json.parse(json_string)
+		if parse_result == OK:
+			var imported_dict = json.get_data()
+			GAME.keyframe_data = {}
+			#JSON is saved as strings, so I'm decompiling this to keep int dict keys to make my life easier
+			#my deep-copy script does this by default so i'm using that for ease
+			for anim in imported_dict:
+				GAME.keyframes_master.deep_kfa_copy(imported_dict,GAME.keyframe_data,anim,anim)
+			GAME.keyframes_master.load_kfas()  #im using Element Selector to do this because
+		else:
+			print("JSON parse error; ", json.get_error_message())

@@ -47,15 +47,6 @@ corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
-[sub_resource type="Gradient" id="Gradient_3k036"]
-offsets = PackedFloat32Array(0)
-colors = PackedColorArray(0, 0, 0, 0)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_bspny"]
-gradient = SubResource("Gradient_3k036")
-width = 20
-height = 20
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n8ec3"]
 bg_color = Color(0.176471, 0.176471, 0.176471, 1)
 border_color = Color(0.254902, 0.254902, 0.254902, 1)
@@ -63,6 +54,14 @@ corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
+
+[sub_resource type="Curve" id="Curve_7c2w4"]
+_data = [Vector2(0, 0.5), 0.0, -2.54167, 0, 1, Vector2(0.196721, 0), -2.54167, 1.64865, 1, 1, Vector2(0.5, 0.5), 0.338841, 0.0, 0, 0, Vector2(0.8, 0), 0.0, 0.0, 0, 0, Vector2(1, 0.5), 0.0, 0.0, 0, 0]
+point_count = 5
+metadata/_snap_enabled = true
+
+[sub_resource type="CurveTexture" id="CurveTexture_t7twf"]
+curve = SubResource("Curve_7c2w4")
 
 [node name="root" type="Node2D"]
 script = ExtResource("1_i5rqx")
@@ -130,18 +129,7 @@ ok_button_text = "Open"
 dialog_hide_on_ok = true
 file_mode = 0
 access = 2
-filters = PackedStringArray("*animation.xml", "*.xml")
-use_native_dialog = true
-
-[node name="SaveDialogue" type="FileDialog" parent="."]
-unique_name_in_owner = true
-auto_translate_mode = 1
-initial_position = 1
-size = Vector2i(600, 300)
-ok_button_text = "Save"
-dialog_hide_on_ok = true
-access = 2
-filters = PackedStringArray("*animation.xml", "*.xml")
+filters = PackedStringArray("animation.xml", "*.xml")
 use_native_dialog = true
 
 [node name="SaveRigDialogue" type="FileDialog" parent="."]
@@ -152,7 +140,7 @@ size = Vector2i(600, 300)
 ok_button_text = "Save"
 dialog_hide_on_ok = true
 access = 2
-filters = PackedStringArray("*_rig.pupp", "*.json")
+filters = PackedStringArray("*.json")
 use_native_dialog = true
 
 [node name="LoadRigDialogue" type="FileDialog" parent="."]
@@ -165,7 +153,7 @@ ok_button_text = "Open"
 dialog_hide_on_ok = true
 file_mode = 0
 access = 2
-filters = PackedStringArray("*_rig.pupp", "*.json")
+filters = PackedStringArray("*.json")
 use_native_dialog = true
 
 [node name="SaveKfasDialogue" type="FileDialog" parent="."]
@@ -176,7 +164,7 @@ size = Vector2i(600, 300)
 ok_button_text = "Save"
 dialog_hide_on_ok = true
 access = 2
-filters = PackedStringArray("*_kfa.pupp", "*.json")
+filters = PackedStringArray("*.json")
 use_native_dialog = true
 
 [node name="LoadKfasDialogue" type="FileDialog" parent="."]
@@ -189,7 +177,7 @@ ok_button_text = "Open"
 dialog_hide_on_ok = true
 file_mode = 0
 access = 2
-filters = PackedStringArray("*_kfa.pupp", "*.json")
+filters = PackedStringArray("*.json")
 use_native_dialog = true
 
 [node name="SubViewport" type="SubViewport" parent="."]
@@ -549,8 +537,6 @@ auto_translate_mode = 1
 title = "Keyframe Properties"
 position = Vector2i(725, 350)
 size = Vector2i(275, 150)
-theme_override_icons/close = SubResource("GradientTexture2D_bspny")
-theme_override_icons/close_pressed = SubResource("GradientTexture2D_bspny")
 script = ExtResource("6_vu4yg")
 base_position = Vector2(29, 14)
 
@@ -643,7 +629,7 @@ text = "delete"
 [node name="keyframe_vis" type="Window" parent="."]
 auto_translate_mode = 1
 title = "Keyframe Vis"
-position = Vector2i(725, 550)
+position = Vector2i(725, 544)
 size = Vector2i(275, 50)
 theme_override_icons/close = ExtResource("6_kt164")
 theme_override_icons/close_pressed = ExtResource("6_kt164")
@@ -694,12 +680,24 @@ layout_mode = 2
 
 [node name="animationsEditor" type="Window" parent="."]
 title = "Baked Animations"
-position = Vector2i(25, 450)
+position = Vector2i(25, 444)
 size = Vector2i(300, 150)
 theme_override_icons/close = ExtResource("6_kt164")
 theme_override_icons/close_pressed = ExtResource("6_kt164")
 script = ExtResource("6_vu4yg")
 base_position = Vector2(1, 18)
+
+[node name="Line2D" type="Line2D" parent="animationsEditor"]
+visible = false
+points = PackedVector2Array(10, 20, 50, 50, 100, 20)
+width = 5.0
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="animationsEditor"]
+visible = false
+texture = SubResource("CurveTexture_t7twf")
 
 [node name="animation_master" type="Control" parent="animationsEditor"]
 unique_name_in_owner = true
@@ -772,14 +770,10 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "▶"
 
-[node name="bake_anim" type="Button" parent="animationsEditor/animation_master/VBoxContainer"]
-layout_mode = 2
-text = "Bake Current KFA"
-
 [node name="keyframesEditor" type="Window" parent="."]
 auto_translate_mode = 1
 title = "Keyframe Animations"
-position = Vector2i(350, 450)
+position = Vector2i(350, 444)
 size = Vector2i(350, 150)
 theme_override_icons/close = ExtResource("6_kt164")
 theme_override_icons/close_pressed = ExtResource("6_kt164")
@@ -915,6 +909,17 @@ layout_mode = 2
 disabled = true
 text = "delete KFA"
 
+[node name="SaveDialogue" type="FileDialog" parent="."]
+unique_name_in_owner = true
+auto_translate_mode = 1
+initial_position = 1
+size = Vector2i(600, 300)
+ok_button_text = "Save"
+dialog_hide_on_ok = true
+access = 2
+filters = PackedStringArray("*.xml")
+use_native_dialog = true
+
 [connection signal="pressed" from="HBoxContainer/Button" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/Button2" to="." method="_on_load_anims_pressed"]
 [connection signal="pressed" from="HBoxContainer/Button3" to="animationsEditor/animation_master" method="on_save_pressed"]
@@ -924,7 +929,6 @@ text = "delete KFA"
 [connection signal="pressed" from="HBoxContainer/Button7" to="." method="_on_save_keys_pressed"]
 [connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]
 [connection signal="file_selected" from="AnimDialogue" to="." method="_on_anim_dialogue_file_selected"]
-[connection signal="file_selected" from="SaveDialogue" to="animationsEditor/animation_master" method="_on_save_dialogue_file_selected"]
 [connection signal="file_selected" from="SaveRigDialogue" to="." method="_on_save_rig_dialogue_file_selected"]
 [connection signal="file_selected" from="LoadRigDialogue" to="." method="_on_load_rig_dialogue_file_selected"]
 [connection signal="file_selected" from="SaveKfasDialogue" to="." method="_on_save_kfas_dialogue_file_selected"]
@@ -951,7 +955,6 @@ text = "delete KFA"
 [connection signal="pressed" from="animationsEditor/animation_master/VBoxContainer/kf_controls/bkd_Apply" to="animationsEditor/animation_master" method="_on_apply_pressed"]
 [connection signal="pressed" from="animationsEditor/animation_master/VBoxContainer/kf_controls/baked_fwd" to="animationsEditor/animation_master" method="_on_baked_fwd_pressed"]
 [connection signal="pressed" from="animationsEditor/animation_master/VBoxContainer/kf_controls/baked_play" to="animationsEditor/animation_master" method="_on_baked_play_pressed"]
-[connection signal="pressed" from="animationsEditor/animation_master/VBoxContainer/bake_anim" to="animationsEditor/animation_master" method="_on_bake_anim_pressed"]
 [connection signal="pressed" from="keyframesEditor/keyframes_master/Apply" to="keyframesEditor/keyframes_master" method="_on_apply_pressed"]
 [connection signal="item_selected" from="keyframesEditor/keyframes_master/VBoxContainer/HBoxContainer3/keyframeanim_selector" to="keyframesEditor/keyframes_master" method="_on_keyframeanim_selector_item_selected"]
 [connection signal="text_submitted" from="keyframesEditor/keyframes_master/VBoxContainer/HBoxContainer3/newAnimName" to="keyframesEditor/keyframes_master" method="_on_new_animname_text_submitted"]
@@ -965,3 +968,4 @@ text = "delete KFA"
 [connection signal="pressed" from="keyframesEditor/keyframes_master/VBoxContainer/kfa_tools/set_global_kf" to="keyframesEditor/keyframes_master" method="_on_set_global_kf_pressed"]
 [connection signal="pressed" from="keyframesEditor/keyframes_master/VBoxContainer/kfa_tools/kfs_clone" to="keyframesEditor/keyframes_master" method="_on_kfs_clone_pressed"]
 [connection signal="pressed" from="keyframesEditor/keyframes_master/VBoxContainer/kfa_tools/kfs_delete" to="keyframesEditor/keyframes_master" method="_on_kfs_delete_pressed"]
+[connection signal="file_selected" from="SaveDialogue" to="animationsEditor/animation_master" method="_on_save_dialogue_file_selected"]

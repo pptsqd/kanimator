@@ -9,8 +9,10 @@ extends Control
 @onready var kf_update = %kf_update
 @onready var kf_delete = %kf_delete
 @onready var kf_easing_sel = %kf_easing_sel
+@onready var kf_easing_type_sel = %kf_easing_type_sel
 
 var focus_attribute = "rot"
+const modifiable = ["ease_in_out", "ease_in", "ease_out"]
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -18,11 +20,14 @@ func _ready():
 		kf_ele_selector.add_item(val)
 	for val in GAME.blend_types:
 		kf_easing_sel.add_item(val)
+	for val in GAME.ease_types:
+		kf_easing_type_sel.add_item(val)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	pass
+	kf_easing_type_sel.disabled = not modifiable.has(kf_easing_sel.get_item_text(kf_easing_sel.selected))
+		
 
 
 func _on_kf_latest_pressed():
@@ -39,10 +44,13 @@ func _on_kf_ele_selector_item_selected(index):
 
 func _on_kf_update_pressed():
 	var key_info = {"node_name" : GAME.element_inspector.current_target.name}
-	key_info[GAME.current_focus_attr] = kf_easing_sel.selected
+	var blend_str = kf_easing_sel.get_item_text(kf_easing_sel.selected)
+	if modifiable.has(blend_str):
+		blend_str += "_" + kf_easing_type_sel.get_item_text(kf_easing_type_sel.selected)
+	key_info[GAME.current_focus_attr] = blend_str
 	GAME.keyframes_master.set_keyframe(key_info)
 
 func _on_kf_delete_pressed():
 	var key_info = {"node_name" : GAME.element_inspector.current_target.name}
-	key_info[GAME.current_focus_attr] = -1
+	key_info[GAME.current_focus_attr] = "delete"
 	GAME.keyframes_master.set_keyframe(key_info)

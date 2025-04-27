@@ -72,11 +72,22 @@ func set_sprite_vis(val):
 	sprite_visible = val
 	
 
-func get_framedata_worldspace():
-	var frame_data = {}
-	
-	return frame_data
-	
+func get_baked_transforms():
+	var result = {}
+	#[X: (1, 0), Y: (0, 1), O: (0.05, 0)]
+	if sprite_visible:
+		#i'm not sure why these are labeled as they are but they seem to work
+		result["m1_tx"] = global_transform.origin.x
+		result["m1_ty"] = global_transform.origin.y
+		result["m1_a"] = global_transform.x.x
+		result["m1_b"] = global_transform.x.y
+		result["m1_c"] = global_transform.y.x
+		result["m1_d"] = global_transform.y.y
+		result["frame"] = frame
+		result["name"] = name
+		result["parentname"] = ""
+	return result
+
 func set_transforms(frame_data):
 	#format is anim_data[anim_name]["frames"][current_processed_frame][element_data.name] = {name layername parentname frame depth m1_a m1_b m1_c m1_d m1_tx m1_ty}
 	var temp_transform = Transform2D(
@@ -85,6 +96,7 @@ func set_transforms(frame_data):
 		Vector2(frame_data.m1_tx, frame_data.m1_ty) # Translation
 	)
 	transform = temp_transform
+	print(transform)
 	set_frame(frame_data.frame)
 	
 func set_from_kfa(frame_num, anim_name):

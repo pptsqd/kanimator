@@ -9,8 +9,10 @@ var anim_list = []
 
 func set_options():
 	option_button.clear()
+	anim_list = []
 	for i in GAME.animation_data:
 		option_button.add_item(i)
+		anim_list.append(i)
 	set_baked_anim(0)
 	%kf_controls.set_locked(false)
 
@@ -57,7 +59,7 @@ func import_animation(file_path: String):
 				
 				#add the data to the dict with anim_name as a key
 				anim_data[anim_name] = {"name" = anim_name, "root" = anim_root, "numframes" = numframes, "firstframe" = 9999999999, "framerate" = framerate, "frames" = frames}
-				anim_list.append(anim_name)
+				
 			"frame":
 				#we're really just getting the index for each frame here.
 				for i in range(xml.get_attribute_count()):
@@ -123,6 +125,18 @@ func import_animation(file_path: String):
 
 
 
+func bake_kfa():
+	var anim_name = GAME.keyframes_master.current_anim
+	var result = {"name" = anim_name, "root" = "", "firstframe" = 0, "frames" = {}}
+	if not GAME.animation_data.has(anim_name):
+		GAME.animation_data[anim_name] = result
+	#GAME.animation_data[anim_name]
+	result["numframes"] = GAME.keyframe_data[anim_name]["numframes"]
+	result["framerate"] = GAME.keyframe_data[anim_name]["framerate"]
+	for frame in result["numframes"]:
+		GAME.build_holder.bake_kfa_frame(anim_name, frame)
+	GAME.animation_data[anim_name] = result
+	set_options()
 #%SaveDialogue.popup()
 
 func export_animation(file_path: String) -> void:
@@ -144,7 +158,7 @@ func export_animation(file_path: String) -> void:
 		# Write each frame
 		#print("HELLO!\n")
 		for frame in processed_data["frames"]:  #todo: change this to be for numframes, we can then divest frames to an array per element!
-			file.store_line('\t\t<frame idx="' + frame + '" w="0" h="0" x="0" y="0">')
+			file.store_line('\t\t<frame idx="' + str(frame) + '" w="0" h="0" x="0" y="0">')
 			# w="0" h="0" x="0" y="0" added just in case
 
 			# Write each element inside the frame
@@ -246,3 +260,7 @@ func _on_baked_bwd_pressed():
 func _on_baked_fwd_pressed():
 	set_baked_frame(current_frame+1)
 	GAME.build_holder.load_frame(anim_list[current_anim], current_frame)
+
+
+func _on_bake_anim_pressed():
+	bake_kfa()

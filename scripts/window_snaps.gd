@@ -2,10 +2,9 @@
 extends Window
 
 @export var base_position : Vector2 = Vector2.ZERO
-
+var saved_size = Vector2.ZERO
 # snapping the inner windows to a 25px grid to fix my ocd
 # calling this every frame is dumb but it works and it's not too heavy at least
-
 	
 func _process(delta):
 	if Engine.is_editor_hint():
@@ -13,3 +12,10 @@ func _process(delta):
 	else:
 		position = (round(position / 25) * 25)
 	size = (round(size / 25) * 25)
+
+
+func _ready():
+	saved_size = size
+	close_requested.connect(func():
+		size = saved_size
+		position = base_position*25)

@@ -76,7 +76,7 @@ func _draw():
 					kfdata_in += y_offset
 					draw_line(Vector2(key_in, kfdata_in), Vector2(key_out, kfdata_in), Color(0.5,.5,.5,.5), 0.5, true)
 					#drawing the stepped keys in!
-				if kf_data.has(i):
+				if kf_data.has(int(i)):
 					draw_line(Vector2(key_in, (kfdata_in) + 2.5 ), Vector2(key_in, (kfdata_in) - 2.5 ), Color.WHITE_SMOKE, 5)
 					#drawing a dot if this is a keyframe!
 	

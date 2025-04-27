@@ -16,8 +16,8 @@ func import_build(file: String, image_directory: String) -> void:
 
 	var file_path = image_directory + "\\" + file
 	
-	if xml.open(file_path) != OK:
-		print("Failed to open XML file")
+	if not xml.open(file_path) == OK:
+		#break!
 		return
 
 	while xml.read() == OK:
@@ -27,13 +27,11 @@ func import_build(file: String, image_directory: String) -> void:
 				for i in range(xml.get_attribute_count()):
 					if xml.get_attribute_name(i) == "name":
 						build_name = xml.get_attribute_value(i)
-				print("Importing build:", build_name)
 			"Symbol":
 				var symbol_name = ""
 				for i in range(xml.get_attribute_count()):
 					if xml.get_attribute_name(i) == "name":
 						symbol_name = xml.get_attribute_value(i)
-				print("Importing symbol:", symbol_name)
 
 				var animated_sprite = KANIMSprite.new()
 				build_node_dict[symbol_name] = {"node" : animated_sprite, "id" : build_nodes.size()}
@@ -49,7 +47,6 @@ func import_build(file: String, image_directory: String) -> void:
 					GAME.rig_data[symbol_name] = {"parent" : animations_node.name}  #adding the rig here just in case
 
 				parse_symbol_frames(xml, animated_sprite, image_directory)
-	print("Import complete!")
 
 # Function to parse frames within a Symbol
 func parse_symbol_frames(xml: XMLParser, sprite: KANIMSprite, image_directory: String) -> void:
@@ -75,10 +72,6 @@ func parse_symbol_frames(xml: XMLParser, sprite: KANIMSprite, image_directory: S
 				var sprite_data = {"texture" = texture, "w" = frame_data.w, "h" = frame_data.h, "x" = frame_data.x, "y" = frame_data.y}
 				sprite.add_frame(sprite_data)
 				#some eles have many frames, so i'm appending them here
-			else:
-				print("Failed to load image:", image_path)
-	
-	print("Frames parsed for symbol")
 
 
 func load_frame(anim_name, idx):
@@ -91,10 +84,20 @@ func load_frame(anim_name, idx):
 		for element in get_children():
 			element.propagate_baked_world(frame_data, 100)  # doing it this way means each element is set in the right place before its kids are which avoids noise
 
-	
-
 func load_kfa_frame(anim_name, idx):
 	idx = fmod(float(idx),float(GAME.keyframe_data[anim_name].numframes)) #for saftey, we cap the idx and numframes
 	idx = int(idx)
 	for element in build_nodes:
 		element.set_from_kfa(idx, anim_name)  # doing it this way means each element is set in the right place before its kids are which avoids noise
+
+func bake_kfa_frame(anim_name, idx):
+	load_kfa_frame(anim_name, idx)
+	#we're loading the kfa anim frame then for each element we bake its transforms
+	#var element_data = processed_data["frames"][frame][element]
+	idx = str(idx) #force string cuz the baked ones use strings
+	GAME.animation_data[anim_name]["frames"][idx] = {}
+	for element in build_nodes:
+		#GAME.animation_data[anim_name]["frames"][idx][element.name] = {"name" : element.name}
+		var bake_res = element.get_baked_transforms()
+		if bake_res != {}:
+			GAME.animation_data[anim_name]["frames"][idx][element.name] = bake_res
