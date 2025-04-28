@@ -22,6 +22,8 @@ func _draw():
 		
 		#sort and draw the data
 		if GAME.element_inspector.current_target and GAME.current_keyframe_animname and GAME.keyframe_data.has(GAME.current_keyframe_animname):
+			if not GAME.element_inspector.current_target:
+				return 0 
 			var target_name = GAME.element_inspector.current_target.name
 			var kf_data = {}
 			if GAME.keyframe_data[GAME.current_keyframe_animname].has(target_name): 

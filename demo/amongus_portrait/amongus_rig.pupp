@@ -1,0 +1,1 @@
+{"backpack":{"parent":"body"},"body":{"parent":"kanim_root"},"eye":{"parent":"head"},"eyelight_1":{"parent":"eye"},"eyelight_2":{"parent":"eye"},"head":{"parent":"body"},"jaw_back":{"parent":"body"},"mouth_back":{"parent":"body"},"tongue":{"parent":"body"},"tooth":{"parent":"head"}}

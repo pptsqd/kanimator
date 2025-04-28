@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://c0arxokk22fw"]
+[gd_scene load_steps=25 format=3 uid="uid://c0arxokk22fw"]
 
 [ext_resource type="Script" path="res://scripts/build_holder.gd" id="1_hcp24"]
 [ext_resource type="Script" path="res://scripts/root.gd" id="1_i5rqx"]
@@ -15,6 +15,7 @@
 [ext_resource type="Script" path="res://scripts/hbox_togglable.gd" id="10_8ltwv"]
 [ext_resource type="Script" path="res://scripts/visualiser.gd" id="10_n8vv6"]
 [ext_resource type="Script" path="res://keyframe_inspector.gd" id="10_wnsh7"]
+[ext_resource type="Script" path="res://scripts/batch_editor.gd" id="13_62342"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_01ks7"]
 animations = [{
@@ -304,7 +305,7 @@ value = 50.0
 [node name="elemnt_sel" type="Window" parent="."]
 title = "Elements"
 position = Vector2i(350, 100)
-size = Vector2i(350, 300)
+size = Vector2i(325, 300)
 theme_override_icons/close = ExtResource("6_kt164")
 theme_override_icons/close_pressed = ExtResource("6_kt164")
 script = ExtResource("6_vu4yg")
@@ -358,12 +359,12 @@ layout_mode = 2
 [node name="elemnt_props" type="Window" parent="."]
 auto_translate_mode = 1
 title = "Element Properties"
-position = Vector2i(725, 100)
+position = Vector2i(700, 100)
 size = Vector2i(275, 200)
 theme_override_icons/close = ExtResource("6_kt164")
 theme_override_icons/close_pressed = ExtResource("6_kt164")
 script = ExtResource("6_vu4yg")
-base_position = Vector2(29, 4)
+base_position = Vector2(28, 4)
 
 [node name="element_inspector" type="Control" parent="elemnt_props"]
 unique_name_in_owner = true
@@ -547,12 +548,12 @@ allow_reselect = true
 [node name="keyframe_attrs" type="Window" parent="."]
 auto_translate_mode = 1
 title = "Keyframe Properties"
-position = Vector2i(725, 350)
+position = Vector2i(700, 350)
 size = Vector2i(275, 150)
 theme_override_icons/close = SubResource("GradientTexture2D_bspny")
 theme_override_icons/close_pressed = SubResource("GradientTexture2D_bspny")
 script = ExtResource("6_vu4yg")
-base_position = Vector2(29, 14)
+base_position = Vector2(28, 14)
 
 [node name="keyframe_inspector" type="Control" parent="keyframe_attrs"]
 layout_mode = 3
@@ -643,12 +644,12 @@ text = "delete"
 [node name="keyframe_vis" type="Window" parent="."]
 auto_translate_mode = 1
 title = "Keyframe Vis"
-position = Vector2i(725, 550)
+position = Vector2i(700, 550)
 size = Vector2i(275, 50)
 theme_override_icons/close = ExtResource("6_kt164")
 theme_override_icons/close_pressed = ExtResource("6_kt164")
 script = ExtResource("6_vu4yg")
-base_position = Vector2(29, 22)
+base_position = Vector2(28, 22)
 
 [node name="keyframe_inspector" type="Control" parent="keyframe_vis"]
 layout_mode = 3
@@ -691,6 +692,47 @@ layout_mode = 2
 [node name="Control2" type="Control" parent="keyframe_vis/VBoxContainer"]
 custom_minimum_size = Vector2(0, 5)
 layout_mode = 2
+
+[node name="Window" type="Window" parent="."]
+title = "KF Batch"
+position = Vector2i(1000, 350)
+size = Vector2i(125, 250)
+script = ExtResource("6_vu4yg")
+base_position = Vector2(40, 14)
+
+[node name="batch_editor" type="Control" parent="Window"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("13_62342")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Window/batch_editor"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="set_global_kf" type="Button" parent="Window/batch_editor/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "set global kf"
+
+[node name="Label" type="Label" parent="Window/batch_editor/VBoxContainer"]
+layout_mode = 2
+text = "Batch Edit:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="kfa_batchEdit" type="LineEdit" parent="Window/batch_editor/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+placeholder_text = "v = value"
 
 [node name="animationsEditor" type="Window" parent="."]
 title = "Baked Animations"
@@ -780,7 +822,7 @@ text = "Bake Current KFA"
 auto_translate_mode = 1
 title = "Keyframe Animations"
 position = Vector2i(350, 450)
-size = Vector2i(350, 150)
+size = Vector2i(325, 150)
 theme_override_icons/close = ExtResource("6_kt164")
 theme_override_icons/close_pressed = ExtResource("6_kt164")
 script = ExtResource("6_vu4yg")
@@ -899,10 +941,6 @@ layout_mode = 2
 script = ExtResource("10_8ltwv")
 start_locked = true
 
-[node name="set_global_kf" type="Button" parent="keyframesEditor/keyframes_master/VBoxContainer/kfa_tools"]
-layout_mode = 2
-text = "set global kf"
-
 [node name="kfs_clone" type="Button" parent="keyframesEditor/keyframes_master/VBoxContainer/kfa_tools"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -946,6 +984,8 @@ text = "delete KFA"
 [connection signal="pressed" from="keyframe_attrs/keyframe_inspector/VBoxContainer/HBoxContainer3/kf_next" to="keyframe_attrs/keyframe_inspector" method="_on_kf_next_pressed"]
 [connection signal="pressed" from="keyframe_attrs/keyframe_inspector/VBoxContainer/HBoxContainer2/kf_update" to="keyframe_attrs/keyframe_inspector" method="_on_kf_update_pressed"]
 [connection signal="pressed" from="keyframe_attrs/keyframe_inspector/VBoxContainer/HBoxContainer2/kf_delete" to="keyframe_attrs/keyframe_inspector" method="_on_kf_delete_pressed"]
+[connection signal="pressed" from="Window/batch_editor/VBoxContainer/set_global_kf" to="keyframesEditor/keyframes_master" method="_on_set_global_kf_pressed"]
+[connection signal="text_submitted" from="Window/batch_editor/VBoxContainer/kfa_batchEdit" to="Window/batch_editor" method="_on_kfa_batch_edit_text_submitted"]
 [connection signal="item_selected" from="animationsEditor/animation_master/VBoxContainer/HBoxContainer3/OptionButton" to="animationsEditor/animation_master" method="_on_baked_anim_selected"]
 [connection signal="pressed" from="animationsEditor/animation_master/VBoxContainer/kf_controls/baked_bwd" to="animationsEditor/animation_master" method="_on_baked_bwd_pressed"]
 [connection signal="pressed" from="animationsEditor/animation_master/VBoxContainer/kf_controls/bkd_Apply" to="animationsEditor/animation_master" method="_on_apply_pressed"]
@@ -962,6 +1002,5 @@ text = "delete KFA"
 [connection signal="pressed" from="keyframesEditor/keyframes_master/VBoxContainer/kfa_controls/kfm_Apply" to="keyframesEditor/keyframes_master" method="_on_kfm_apply_pressed"]
 [connection signal="pressed" from="keyframesEditor/keyframes_master/VBoxContainer/kfa_controls/kfm_fwd" to="keyframesEditor/keyframes_master" method="_on_kfm_fwd_pressed"]
 [connection signal="pressed" from="keyframesEditor/keyframes_master/VBoxContainer/kfa_controls/kfa_play" to="keyframesEditor/keyframes_master" method="_on_kfa_play_pressed"]
-[connection signal="pressed" from="keyframesEditor/keyframes_master/VBoxContainer/kfa_tools/set_global_kf" to="keyframesEditor/keyframes_master" method="_on_set_global_kf_pressed"]
 [connection signal="pressed" from="keyframesEditor/keyframes_master/VBoxContainer/kfa_tools/kfs_clone" to="keyframesEditor/keyframes_master" method="_on_kfs_clone_pressed"]
 [connection signal="pressed" from="keyframesEditor/keyframes_master/VBoxContainer/kfa_tools/kfs_delete" to="keyframesEditor/keyframes_master" method="_on_kfs_delete_pressed"]

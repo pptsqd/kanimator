@@ -125,19 +125,6 @@ func import_animation(file_path: String):
 
 
 
-func bake_kfa():
-	var anim_name = GAME.keyframes_master.current_anim
-	var result = {"name" = anim_name, "root" = "", "firstframe" = 0, "frames" = {}}
-	if not GAME.animation_data.has(anim_name):
-		GAME.animation_data[anim_name] = result
-	#GAME.animation_data[anim_name]
-	result["numframes"] = GAME.keyframe_data[anim_name]["numframes"]
-	result["framerate"] = GAME.keyframe_data[anim_name]["framerate"]
-	for frame in result["numframes"]:
-		GAME.build_holder.bake_kfa_frame(anim_name, frame)
-	GAME.animation_data[anim_name] = result
-	set_options()
-#%SaveDialogue.popup()
 
 func export_animation(file_path: String) -> void:
 	
@@ -229,8 +216,41 @@ func _on_baked_play_pressed():
 	else: %baked_play.text = "▶"
 		
 
+var baking = false
+var bake_frame = 0
+var bake_length = 0
+var bake_name = ""
+#var bake_result = {}
+
+func bake_kfa():
+	var anim_name = GAME.keyframes_master.current_anim
+	var bake_result = {"name" = anim_name, "root" = "", "firstframe" = 0, "frames" = {}}
+	if not GAME.animation_data.has(anim_name):
+		GAME.animation_data[anim_name] = bake_result
+	#GAME.animation_data[anim_name]
+	bake_result["numframes"] = GAME.keyframe_data[anim_name]["numframes"]
+	bake_result["framerate"] = GAME.keyframe_data[anim_name]["framerate"]
+	bake_length = bake_result["numframes"]
+	bake_name = anim_name
+	bake_frame = 0
+	baking = true
+	#for frame in bake_result["numframes"]:
+		#GAME.build_holder.bake_kfa_frame(anim_name, frame)
+	#GAME.animation_data[anim_name] = bake_result
+	#set_options()
+#%SaveDialogue.popup()
+
 func _process(delta):
-	if playing:
+	if baking:
+		if bake_frame < bake_length:
+			GAME.build_holder.bake_kfa_frame(bake_name, bake_frame)
+			bake_frame += 1
+		else:
+			baking = false
+			#GAME.animation_data[bake_name] = bake_result
+			set_options()
+		
+	elif playing:
 		playing_delta += delta
 		if playing_delta > (1.0/frame_rate):
 			set_baked_frame(current_frame+1)

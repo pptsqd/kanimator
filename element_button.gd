@@ -27,7 +27,9 @@ func _on_parent_selector_item_selected(index):
 func update_parent():
 	#this is very backwards but whatever it's done
 	var id = 0
-	var to_parent = GAME.rig_data[target_node.name].parent
+	var to_parent = "kanim_root"
+	if GAME.rig_data.has(target_node.name):
+		to_parent = GAME.rig_data[target_node.name].parent
 	if to_parent == "kanim_root":
 		pass
 	else:

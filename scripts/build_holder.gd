@@ -47,6 +47,7 @@ func import_build(file: String, image_directory: String) -> void:
 					GAME.rig_data[symbol_name] = {"parent" : animations_node.name}  #adding the rig here just in case
 
 				parse_symbol_frames(xml, animated_sprite, image_directory)
+				animated_sprite.set_frame(0)
 
 # Function to parse frames within a Symbol
 func parse_symbol_frames(xml: XMLParser, sprite: KANIMSprite, image_directory: String) -> void:

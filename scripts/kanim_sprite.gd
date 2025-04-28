@@ -80,8 +80,8 @@ func get_baked_transforms():
 		result["m1_tx"] = global_transform.origin.x
 		result["m1_ty"] = global_transform.origin.y
 		result["m1_a"] = global_transform.x.x
-		result["m1_b"] = global_transform.x.y
-		result["m1_c"] = global_transform.y.x
+		result["m1_b"] = global_transform.y.x  #these seem to be out of order but i guess they do things diff?
+		result["m1_c"] = global_transform.x.y
 		result["m1_d"] = global_transform.y.y
 		result["frame"] = frame
 		result["name"] = name

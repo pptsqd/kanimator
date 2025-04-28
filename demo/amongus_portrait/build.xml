@@ -1,0 +1,35 @@
+<Build name="gooseportrait_R.fla">
+  <Symbol name="eyelight_2">
+    <Frame framenum="0" duration="1" image="eyelight_2" w="180" h="180" x="0" y="0" />
+  </Symbol>
+  <Symbol name="eyelight_1">
+    <Frame framenum="0" duration="1" image="eyelight_1" w="180" h="180" x="0" y="0" />
+  </Symbol>
+  <Symbol name="eye">
+    <Frame framenum="0" duration="1" image="eye" w="180" h="180" x="0" y="0" />
+  </Symbol>
+  <Symbol name="tongue">
+    <Frame framenum="0" duration="1" image="tongue_a" w="150" h="200" x="0.0" y="-0.0" />
+    <Frame framenum="1" duration="1" image="tongue_b"  w="150" h="200" x="0.0" y="-0.0" />
+    <Frame framenum="2" duration="1" image="tongue_c"  w="150" h="200" x="0.0" y="-0.0" />
+  </Symbol>
+  <Symbol name="head">
+    <Frame framenum="0" duration="1" image="head" w="250" h="200" x="60" y="0" />
+  </Symbol>
+  <Symbol name="body">
+    <Frame framenum="0" duration="1" image="body_full" w="316" h="440" x="0.0" y="-220"  />
+    <Frame framenum="1" duration="1" image="jaw" w="316" h="440" x="0.0" y="-220"  />
+  </Symbol>
+  <Symbol name="jaw_back">
+    <Frame framenum="1" duration="1" image="jaw_back" w="316" h="440" x="0.0" y="-220"  />
+  </Symbol>
+  <Symbol name="tooth">
+    <Frame framenum="0" duration="1" image="tooth" w="250" h="200" x="17" y="-68" />
+  </Symbol>
+  <Symbol name="mouth_back">
+    <Frame framenum="0" duration="1" image="mouth_back" w="316" h="440" x="0.0" y="-220" />
+  </Symbol>
+  <Symbol name="backpack">
+    <Frame framenum="0" duration="1" image="backpack" w="222" h="222" x="0.0" y="0.0" />
+  </Symbol>
+</Build>

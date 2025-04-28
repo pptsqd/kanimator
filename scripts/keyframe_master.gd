@@ -116,9 +116,12 @@ func deep_kfa_copy(source_dict,target_dict,from_name,to_name):
 
 func edit_keyframe(node_name, attr_name, key_data, blend_type, key_num):
 	#print(blend_type)
-	if blend_type == "delete":
+	if not GAME.keyframe_data[GAME.current_keyframe_animname].has(node_name):
+		create_keyframe_basis(node_name, GAME.current_keyframe_animname)
+	if str(blend_type) == "delete":
 		GAME.keyframe_data[GAME.current_keyframe_animname][node_name][attr_name].erase(key_num)
 	else:
+			
 		GAME.keyframe_data[GAME.current_keyframe_animname][node_name][attr_name][int(key_num)] = {"value" : key_data, "blend" : blend_type}
 
 func set_keyframe(data):
@@ -181,7 +184,7 @@ var focused_attribute = ""
 
 func go_to_prev_key(node_name, attr_name):
 	playing = false
-	if not (GAME.keyframe_data[GAME.current_keyframe_animname][node_name] and GAME.keyframe_data[GAME.current_keyframe_animname][node_name][attr_name]):
+	if not (GAME.keyframe_data[GAME.current_keyframe_animname].has(node_name) and GAME.keyframe_data[GAME.current_keyframe_animname][node_name][attr_name]):
 		return 0
 	var raw_data = GAME.keyframe_data[GAME.current_keyframe_animname][node_name][attr_name]
 	var last_key_num = get_latest_key(raw_data, current_kfa_frame-1)
