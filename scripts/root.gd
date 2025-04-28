@@ -8,14 +8,18 @@ extends Node2D
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	GAME.element_inspector = %element_inspector
+	GAME.keyframe_inspector = %keyframe_inspector
 	GAME.build_holder = %kanim_root
 	GAME.element_selector = %element_selector
 	GAME.keyframes_master = %keyframes_master
 
-
+@onready var tile = %tile
+@onready var portrait_bounds = %portrait_bounds
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	pass
+	portrait_bounds.visible = %show_bounds.button_pressed
+	tile.visible = %show_tile.button_pressed
+
 
 
 func _on_file_dialog_file_selected(path):
@@ -123,7 +127,7 @@ func _on_load_kfas_dialogue_file_selected(path):
 			#JSON is saved as strings, so I'm decompiling this to keep int dict keys to make my life easier
 			#my deep-copy script does this by default so i'm using that for ease
 			for anim in imported_dict:
-				GAME.keyframes_master.deep_kfa_copy(imported_dict,GAME.keyframe_data,anim,anim)
+				GAME.keyframes_master.deep_kfa_copy(imported_dict,GAME.keyframe_data,anim,anim,{})
 			GAME.keyframes_master.load_kfas()  #im using Element Selector to do this because
 		else:
 			print("JSON parse error; ", json.get_error_message())

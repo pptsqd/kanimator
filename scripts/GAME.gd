@@ -5,6 +5,7 @@ var element_selector : Element_Selector
 var animation_master : Animation_Master
 var element_inspector : Element_Inspector
 var keyframes_master : Keyframes_Master
+var keyframe_inspector : Keyframe_Inspector
 
 var build_holder : Build_Holder
 var animation_data = {}

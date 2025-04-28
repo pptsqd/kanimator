@@ -39,18 +39,25 @@ func _process(delta):
 			playing_delta -= 1.0/frame_rate
 			GAME.build_holder.load_kfa_frame(GAME.current_keyframe_animname, current_kfa_frame)
 	else: %kfa_play.text = "▶"
-
+	
+	
 	if new_anim_name.text == "":
-		# adding extra controls for the KFAs
 		%kfs_clone.disabled = true
 		%kfs_delete.disabled = true
+		%kfs_append.disabled = true
 	else:
 		if GAME.keyframe_data.has(new_anim_name.text):
 			%kfs_clone.disabled = true
-			%kfs_delete.disabled = false
+			if new_anim_name.text == GAME.current_keyframe_animname:
+				%kfs_delete.disabled = false
+				%kfs_append.disabled = true
+			else:
+				%kfs_append.disabled = false
+				%kfs_delete.disabled = true
 		elif GAME.current_keyframe_animname:
 			%kfs_clone.disabled = false
 			%kfs_delete.disabled = true
+			%kfs_append.disabled = true
 
 
 func _on_new_animname_text_submitted(new_text):
@@ -97,37 +104,67 @@ func delete_kfa(animname):
 		change_kfanim(%keyframeanim_selector.get_item_text(0))
 	
 func clone_kfa(new_animname):
-	deep_kfa_copy(GAME.keyframe_data,GAME.keyframe_data,GAME.current_keyframe_animname,new_animname)
+	deep_kfa_copy(GAME.keyframe_data,GAME.keyframe_data,GAME.current_keyframe_animname,new_animname,{})
 	load_kfas()
 	change_kfanim(new_animname)
 
-func deep_kfa_copy(source_dict,target_dict,from_name,to_name):
+func deep_kfa_copy(source_dict,target_dict,from_name,to_name,extra_data):
 	#a standard duplicate leaves sub-values linked, this is a brand new dict being made
 	target_dict[to_name] = {"framerate" = source_dict[from_name]["framerate"],"numframes" = source_dict[from_name]["numframes"]}
+	var paste_offset = 0
+	var range = false
+	var range_start = 0
+	var range_end = 0
 	for nodename in source_dict[from_name]:
 		if not (nodename == "framerate" or nodename == "numframes"):
 			target_dict[to_name][nodename] = {}
 			for attr in source_dict[from_name][nodename]:
 				target_dict[to_name][nodename][attr] = {}
 				for key_num in source_dict[from_name][nodename][attr]:
-					target_dict[to_name][nodename][attr][int(key_num)] = source_dict[from_name][nodename][attr][key_num]
+					#if range == false or (key_num >= range_start and key_num <= range_end): 
+					target_dict[to_name][nodename][attr][int(key_num)+paste_offset] = source_dict[from_name][nodename][attr][key_num]
 					#making sure the frame num key is an int to make maths easy
 
+func kfa_append(source_dict,target_dict,from_name,to_name,extra_data):
+	#a standard duplicate leaves sub-values linked, this is a brand new dict being made
+	var paste_offset = 0
+	var range = false
+	var range_start = 0
+	var range_end = 0
+	if extra_data.has("append"):
+		paste_offset = target_dict[to_name]["numframes"]
+		target_dict[to_name]["numframes"] = target_dict[to_name]["numframes"] + source_dict[from_name]["numframes"]
+	if extra_data.has("range"):
+		range_start = extra_data.range.x
+		range_end = extra_data.range.y
+		range = true
+	for nodename in source_dict[from_name]:
+		if not (nodename == "framerate" or nodename == "numframes"):
+			if not target_dict[to_name].has(nodename):
+				target_dict[to_name][nodename] = {}
+			for attr in source_dict[from_name][nodename]:
+				if not target_dict[to_name][nodename].has(attr):
+					target_dict[to_name][nodename][attr] = {}
+				for key_num in source_dict[from_name][nodename][attr]:
+					#if range == false or (key_num >= range_start and key_num <= range_end): 
+					target_dict[to_name][nodename][attr][int(key_num)+paste_offset] = source_dict[from_name][nodename][attr][key_num]
+					#making sure the frame num key is an int to make maths easy
 
 func edit_keyframe(node_name, attr_name, key_data, blend_type, key_num):
-	#print(blend_type)
+	#print(node_name)
 	if not GAME.keyframe_data[GAME.current_keyframe_animname].has(node_name):
 		create_keyframe_basis(node_name, GAME.current_keyframe_animname)
 	if str(blend_type) == "delete":
 		GAME.keyframe_data[GAME.current_keyframe_animname][node_name][attr_name].erase(key_num)
 	else:
-			
 		GAME.keyframe_data[GAME.current_keyframe_animname][node_name][attr_name][int(key_num)] = {"value" : key_data, "blend" : blend_type}
 
 func set_keyframe(data):
 	var node_name = data.node_name
 	var node = GAME.build_holder.build_node_dict[node_name].node
 	var key_num = int(current_kfa_frame) #GAME.current_keyframe
+	if data.has("key_num"):
+		key_num = data.key_num
 	if data.has("pos_x"):
 		edit_keyframe(node_name, "pos_x", node.position.x, data.pos_x, key_num)
 	if data.has("pos_y"):
@@ -151,7 +188,9 @@ func _on_set_global_kf_pressed():
 
 
 func get_kfa_data(node_name, attr_name, frame_num):
-	if not (GAME.keyframe_data[GAME.current_keyframe_animname][node_name] and GAME.keyframe_data[GAME.current_keyframe_animname][node_name][attr_name]):
+	if not GAME.keyframe_data:
+		return 0
+	if not (GAME.keyframe_data[GAME.current_keyframe_animname].has(node_name) and GAME.keyframe_data[GAME.current_keyframe_animname][node_name].has(attr_name)):
 		if attr_name == "scl_x" or attr_name == "scl_y":
 			return 1 # override default for scale when data is missing
 		return 0
@@ -276,7 +315,14 @@ func _on_kfs_delete_pressed():
 
 
 func _on_kfs_clone_pressed():
+	print("CLONE")
 	clone_kfa(new_anim_name.text)
 	new_anim_name.text = ""
 	%keyframeanim_selector.select(%keyframeanim_selector.item_count-1)
 	
+
+
+func _on_kfs_append_pressed():
+	kfa_append(GAME.keyframe_data,GAME.keyframe_data,GAME.current_keyframe_animname,new_anim_name.text,{"append":true})
+	new_anim_name.text = ""
+	load_kfas()

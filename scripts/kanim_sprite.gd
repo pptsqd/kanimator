@@ -42,8 +42,8 @@ func set_frame(n):
 func set_transforms_worldspace(frame_data):
 	#this updated version of set_transforms will ignore parenting information, allowing us to load existing anims onto rigs
 	var temp_transform = Transform2D(
-		Vector2(frame_data.m1_a, frame_data.m1_c),  # First column
-		Vector2(frame_data.m1_b, frame_data.m1_d),  # Second column
+		Vector2(frame_data.m1_a, frame_data.m1_b),  # First column
+		Vector2(frame_data.m1_c, frame_data.m1_d),  # Second column
 		Vector2(frame_data.m1_tx, frame_data.m1_ty) # Translation
 	)
 	global_transform = temp_transform  # since the scene is rendered through rendercam I don't need to do clever stuff!
@@ -80,8 +80,8 @@ func get_baked_transforms():
 		result["m1_tx"] = global_transform.origin.x
 		result["m1_ty"] = global_transform.origin.y
 		result["m1_a"] = global_transform.x.x
-		result["m1_b"] = global_transform.y.x  #these seem to be out of order but i guess they do things diff?
-		result["m1_c"] = global_transform.x.y
+		result["m1_b"] = global_transform.x.y
+		result["m1_c"] = global_transform.y.x
 		result["m1_d"] = global_transform.y.y
 		result["frame"] = frame
 		result["name"] = name
@@ -91,8 +91,8 @@ func get_baked_transforms():
 func set_transforms(frame_data):
 	#format is anim_data[anim_name]["frames"][current_processed_frame][element_data.name] = {name layername parentname frame depth m1_a m1_b m1_c m1_d m1_tx m1_ty}
 	var temp_transform = Transform2D(
-		Vector2(frame_data.m1_a, frame_data.m1_c),  # First column
-		Vector2(frame_data.m1_b, frame_data.m1_d),  # Second column
+		Vector2(frame_data.m1_a, frame_data.m1_b),  # First column
+		Vector2(frame_data.m1_c, frame_data.m1_d),  # Second column
 		Vector2(frame_data.m1_tx, frame_data.m1_ty) # Translation
 	)
 	transform = temp_transform

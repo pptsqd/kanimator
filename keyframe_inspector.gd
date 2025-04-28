@@ -41,12 +41,15 @@ func _on_kf_next_pressed():
 func _on_kf_ele_selector_item_selected(index):
 	GAME.current_focus_attr = GAME.attr_types[index]
 
-
-func _on_kf_update_pressed():
-	var key_info = {"node_name" : GAME.element_inspector.current_target.name}
+func get_blend_type():
 	var blend_str = kf_easing_sel.get_item_text(kf_easing_sel.selected)
 	if modifiable.has(blend_str):
 		blend_str += "_" + kf_easing_type_sel.get_item_text(kf_easing_type_sel.selected)
+	return blend_str
+
+func _on_kf_update_pressed():
+	var key_info = {"node_name" : GAME.element_inspector.current_target.name}
+	var blend_str = get_blend_type()
 	key_info[GAME.current_focus_attr] = blend_str
 	GAME.keyframes_master.set_keyframe(key_info)
 

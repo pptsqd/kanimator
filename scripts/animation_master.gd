@@ -164,8 +164,9 @@ func export_animation(file_path: String) -> void:
 					element_data.get("m1_d", 0.0),
 					element_data.get("m1_tx", 0.0),
 					element_data.get("m1_ty", 0.0),
-					' m0_a="1" m0_b="0" m0_c="0" m0_d="1" m0_tx="0" m0_ty="0" c_01="0" c_02="0" c_03="0" c_10="0" c_12="0" c_13="0" c_20="0" c_21="0" c_23="0" c_30="0" c_31="0" c_32="0" c_40="0" c_41="0" c_42="0" c_43="0" c_44="1" c_00="1" c_11="1" c_22="1" c_33="0.5" c_04="0" c_14="0" c_24="0" c_34="0"'
+					' m0_a="1" m0_b="0" m0_c="0" m0_d="1" m0_tx="0" m0_ty="0" c_01="0" c_02="0" c_03="0" c_10="0" c_12="0" c_13="0" c_20="0" c_21="0" c_23="0" c_30="0" c_31="0" c_32="0" c_40="0" c_41="0" c_42="0" c_43="0" c_44="1" c_00="1" c_11="1" c_22="1" c_33="1" c_04="0" c_14="0" c_24="0" c_34="0"'
 				]) #re-adding the junk(?) at the end just in case
+				#c_33="0.5" is half opacity???
 				#todo: export <pupp_keyframes> with <element><frame "parent" "ease" "sprite_frame" "position/rotation/scale" ...> for loading with editor 
 				#OR just use JSON and a seperatefile type
 			file.store_line('</frame>')
