@@ -25,7 +25,7 @@ func _process(delta):
 		num_frames = GAME.keyframe_data[GAME.current_keyframe_animname]["numframes"]
 		num_frames_shown = int(max(1,ceil(num_frames*frames_shown_mod)))
 		attribute = GAME.current_focus_attr
-		if GAME.element_inspector.current_target and GAME.element_inspector.current_target.is_instance_valid() :
+		if GAME.element_inspector.current_target :
 			target_name = GAME.element_inspector.current_target.name
 			kf_data = {}
 			if GAME.keyframe_data[GAME.current_keyframe_animname].has(target_name): 
