@@ -22,15 +22,18 @@ var bounds_center : float
 func _process(delta):
 	# validity checks
 	if GAME.keyframes_master.current_anim and GAME.element_inspector.current_target and GAME.current_focus_attr and GAME.keyframe_data.has(GAME.current_keyframe_animname) and GAME.keyframe_data[GAME.current_keyframe_animname].has("numframes"):
+
 		num_frames = GAME.keyframe_data[GAME.current_keyframe_animname]["numframes"]
 		num_frames_shown = int(max(1,ceil(num_frames*frames_shown_mod)))
-		attribute = GAME.current_focus_attr
+		attribute = GAME.current_focus_attr		
 		if GAME.element_inspector.current_target :
 			target_name = GAME.element_inspector.current_target.name
 			kf_data = {}
 			if GAME.keyframe_data[GAME.current_keyframe_animname].has(target_name): 
 				if GAME.keyframe_data[GAME.current_keyframe_animname][target_name].has(attribute):
 					kf_data = GAME.keyframe_data[GAME.current_keyframe_animname][target_name][attribute]
+					if not GAME.keyframe_data[GAME.current_keyframe_animname][target_name][attribute].size() > 0:
+						return false  #dont show no keys
 				else:
 					return 0
 			else:

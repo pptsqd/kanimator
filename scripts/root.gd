@@ -1,4 +1,4 @@
-extends Node2D
+extends Control
 
 @onready var element_selector = %element_selector
 @onready var animation_master = %animation_master

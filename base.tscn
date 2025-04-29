@@ -69,8 +69,29 @@ corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
-[node name="root" type="Node2D"]
+[node name="root" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_i5rqx")
+
+[node name="Label" type="Label" parent="."]
+modulate = Color(1, 1, 1, 0.478431)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -215.0
+offset_top = -23.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "KANIMator by Puppetsquid "
+horizontal_alignment = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 offset_left = 10.0
@@ -1172,7 +1193,6 @@ text = "append KFA"
 [connection signal="file_selected" from="LoadKfasDialogue" to="." method="_on_load_kfas_dialogue_file_selected"]
 [connection signal="value_changed" from="kanimaViewer/Control2/Control/HScrollBar" to="." method="_on_viewer_h_scroll_bar_value_changed"]
 [connection signal="value_changed" from="kanimaViewer/Control2/Control/VScrollBar" to="." method="_on_viewer_v_scroll_bar_value_changed"]
-[connection signal="changed" from="kanimaViewer/Control2/anim_resize" to="." method="_on_anim_resize_changed"]
 [connection signal="value_changed" from="kanimaViewer/Control2/anim_resize" to="." method="_on_anim_resize_value_changed"]
 [connection signal="value_changed" from="elemnt_props/element_inspector/VBoxContainer/GridContainer/Control/spin_pos_x" to="elemnt_props/element_inspector" method="_on_spin_pos_x_value_changed"]
 [connection signal="value_changed" from="elemnt_props/element_inspector/VBoxContainer/GridContainer/Control/spin_pos_y" to="elemnt_props/element_inspector" method="_on_spin_pos_y_value_changed"]

@@ -6,6 +6,7 @@ var build_nodes = []
 var build_node_dict = {}
 
 func import_build(file: String, image_directory: String) -> void:
+	GAME.element_inspector.current_target = null
 	build_nodes = []
 	build_node_dict = {"kanim_root" : {"node":GAME.build_holder}}
 	for child in get_children(): #cull the kids
