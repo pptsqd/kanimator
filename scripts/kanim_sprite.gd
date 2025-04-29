@@ -7,6 +7,7 @@ var animated_sprite : AnimatedSprite2D
 var frames_info = [] #storing the offsets in an array to match the frames
 var build_holder : Build_Holder
 var frame : int = 0
+var numframes : int = 0
 var rig_parent : Node
 var element_button : Element_Button
 var sprite_visible = true
@@ -29,6 +30,7 @@ func change_rig_parent(new_parent):
 func add_frame(sprite_data):
 	animated_sprite.sprite_frames.add_frame("default", sprite_data.texture)
 	frames_info.append(sprite_data)
+	numframes += 1
 
 func set_frame(n):
 	if n > frames_info.size()-1:

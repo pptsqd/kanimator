@@ -226,11 +226,10 @@ var bake_name = ""
 func bake_kfa():
 	var anim_name = GAME.keyframes_master.current_anim
 	var bake_result = {"name" = anim_name, "root" = "", "firstframe" = 0, "frames" = {}}
-	if not GAME.animation_data.has(anim_name):
-		GAME.animation_data[anim_name] = bake_result
-	#GAME.animation_data[anim_name]
 	bake_result["numframes"] = GAME.keyframe_data[anim_name]["numframes"]
 	bake_result["framerate"] = GAME.keyframe_data[anim_name]["framerate"]
+	GAME.animation_data[anim_name] = bake_result
+	#GAME.animation_data[anim_name]
 	bake_length = bake_result["numframes"]
 	bake_name = anim_name
 	bake_frame = 0
