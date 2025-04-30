@@ -1,8 +1,10 @@
+class_name AnimNames
 extends Node
 
 #S and E are left and right?
 var anim_names = [
 	#shared_basic_a_01.anim
+	"idle", 
 	"run", 
 	"snk", 
 	"walk", 
@@ -36,20 +38,13 @@ var anim_names = [
 	"overwatch_trans", 
 	"overwatch_switch", # ( "overwatch_switch_"..facing, oldFacing) but uses odd numbers so check the code
 	#shared_basic_a_05.anim
-	"hide_peek_pre_R", 
-	"peek_R", 
-	"hide_peek_pst_R", 
-	"hide_peek_pre_L", 
-	"peek_L", 
-	"hide_peek_pst_L", 
-	"lean_peek_pre_R", 
-	"lean_peek_pst_R", 
-	"lean_peek_pre_L", 
-	"lean_peek_pst_L", 
-	"hide_walk_L", 
-	"hide_walk_pst_L", 
-	"hide_walk_R", 
-	"hide_walk_pst_R", 
+	"peek_", 
+	"hide_peek_pst_", 
+	"hide_peek_pst_", 
+	"lean_peek_pre_", 
+	"lean_peek_pst_", 
+	"hide_walk_", 
+	"hide_walk_pst_",  #all these peeks hae L and R versions?
 	"lean_overwatch_pre", 
 	"lean_overwatch_pst", 
 	#shared_basic_a_06.anim
@@ -58,7 +53,6 @@ var anim_names = [
 	"phone_idle", 
 	"phone", 
 	#martial_basic_b_01.anim
-	"idle", 
 	"shoot_pre", 
 	"shoot_pst", 
 	"shootburst_pre", 
@@ -111,14 +105,10 @@ var anim_names = [
 	#shared_attacks_a_03.anim
 	"throw", 
 	"throw_pst", 
-	"hide_throw_L", 
-	"hide_throw_pst_L", 
-	"hide_throw_R", 
-	"hide_throw_pst_R", 
-	"lean_throw_R", 
-	"lean_throw_pst_R", 
-	"lean_throw_L", 
-	"lean_throw_pst_L", 
+	"hide_throw_", # L AND R
+	"hide_throw_pst_", # L AND R
+	"lean_throw_", # L AND R
+	"lean_throw_pst_", # L AND R
 	"door_kick_pre", 
 	"door_kick_pst", 
 	#shared_attacks_a_04.anim

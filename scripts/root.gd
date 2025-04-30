@@ -9,6 +9,7 @@ extends Control
 func _ready():
 	GAME.element_inspector = %element_inspector
 	GAME.keyframe_inspector = %keyframe_inspector
+	GAME.animation_master = %animation_master
 	GAME.build_holder = %kanim_root
 	GAME.element_selector = %element_selector
 	GAME.keyframes_master = %keyframes_master
@@ -132,3 +133,10 @@ func _on_load_kfas_dialogue_file_selected(path):
 			GAME.keyframes_master.load_kfas()  #im using Element Selector to do this because
 		else:
 			print("JSON parse error; ", json.get_error_message())
+
+
+func _on_export_kab_pressed():
+	%exportKABDialogue.popup()
+	
+func _on_export_kab_dialogue_file_selected(path):
+	%KAB_builder.export_KAB(path)

@@ -1,0 +1,9 @@
+
+Try making a rig animation
+export KleiAnimBuild (KAB)
+<anim name="anim" for each sprite
+add layername to each sprite's elements
+
+maybe try dropdown for picking existing names based on elements (nck = 2591174623)
+
+try concatting anims / anims_1h with the new anim file

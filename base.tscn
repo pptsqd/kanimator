@@ -1,8 +1,9 @@
-[gd_scene load_steps=29 format=3 uid="uid://c0arxokk22fw"]
+[gd_scene load_steps=32 format=3 uid="uid://c0arxokk22fw"]
 
 [ext_resource type="Script" path="res://scripts/build_holder.gd" id="1_hcp24"]
 [ext_resource type="Script" path="res://scripts/root.gd" id="1_i5rqx"]
 [ext_resource type="Texture2D" uid="uid://xkddrxhcffig" path="res://icon.svg" id="1_kc83b"]
+[ext_resource type="Script" path="res://kab_builder.gd" id="2_e8tup"]
 [ext_resource type="Script" path="res://scripts/kanim_sprite.gd" id="3_q83om"]
 [ext_resource type="Texture2D" uid="uid://doig102ke0h3a" path="res://ui/tile.png" id="5_hooqk"]
 [ext_resource type="Script" path="res://element_selector.gd" id="6_2qt1v"]
@@ -17,8 +18,10 @@
 [ext_resource type="Script" path="res://scripts/hbox_togglable.gd" id="10_8ltwv"]
 [ext_resource type="Script" path="res://scripts/visualiser.gd" id="10_n8vv6"]
 [ext_resource type="Script" path="res://keyframe_inspector.gd" id="10_wnsh7"]
+[ext_resource type="Script" path="res://scripts/root_offsets.gd" id="12_llcwn"]
 [ext_resource type="Script" path="res://scripts/batch_editor.gd" id="13_62342"]
 [ext_resource type="Script" path="res://kfa_data_editor.gd" id="18_ka5ou"]
+[ext_resource type="Script" path="res://scripts/anim_map_builder.gd" id="19_2k8yd"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_01ks7"]
 animations = [{
@@ -94,6 +97,13 @@ grow_vertical = 0
 text = "KANIMator by Puppetsquid "
 horizontal_alignment = 2
 
+[node name="KAB_builder" type="Control" parent="."]
+unique_name_in_owner = true
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("2_e8tup")
+
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 0
 offset_left = 10.0
@@ -125,6 +135,12 @@ text = "LOAD RIG"
 custom_minimum_size = Vector2(110, 0)
 layout_mode = 2
 text = "SAVE RIG"
+
+[node name="exportKAB" type="Button" parent="HBoxContainer"]
+visible = false
+custom_minimum_size = Vector2(110, 0)
+layout_mode = 2
+text = "XPORT KAB"
 
 [node name="Button6" type="Button" parent="HBoxContainer"]
 custom_minimum_size = Vector2(110, 0)
@@ -162,6 +178,17 @@ filters = PackedStringArray("*animation.xml", "*.xml")
 use_native_dialog = true
 
 [node name="SaveDialogue" type="FileDialog" parent="."]
+unique_name_in_owner = true
+auto_translate_mode = 1
+initial_position = 1
+size = Vector2i(600, 300)
+ok_button_text = "Save"
+dialog_hide_on_ok = true
+access = 2
+filters = PackedStringArray("*animation.xml", "*.xml")
+use_native_dialog = true
+
+[node name="exportKABDialogue" type="FileDialog" parent="."]
 unique_name_in_owner = true
 auto_translate_mode = 1
 initial_position = 1
@@ -273,40 +300,99 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("6_2qt1v")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="elemnt_sel/element_selector"]
+[node name="VBoxContainer" type="VBoxContainer" parent="elemnt_sel/element_selector"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="elemnt_sel/element_selector/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
 alignment = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="elemnt_sel/element_selector/HBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="elemnt_sel/element_selector/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="element_button_holder" type="VBoxContainer" parent="elemnt_sel/element_selector/HBoxContainer/ScrollContainer"]
+[node name="element_button_holder" type="VBoxContainer" parent="elemnt_sel/element_selector/VBoxContainer/HBoxContainer/ScrollContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="element_button" parent="elemnt_sel/element_selector/HBoxContainer/ScrollContainer/element_button_holder" instance=ExtResource("6_f73j4")]
+[node name="element_button" parent="elemnt_sel/element_selector/VBoxContainer/HBoxContainer/ScrollContainer/element_button_holder" instance=ExtResource("6_f73j4")]
 layout_mode = 2
 
-[node name="element_button2" parent="elemnt_sel/element_selector/HBoxContainer/ScrollContainer/element_button_holder" instance=ExtResource("6_f73j4")]
+[node name="element_button2" parent="elemnt_sel/element_selector/VBoxContainer/HBoxContainer/ScrollContainer/element_button_holder" instance=ExtResource("6_f73j4")]
 layout_mode = 2
 
-[node name="element_button3" parent="elemnt_sel/element_selector/HBoxContainer/ScrollContainer/element_button_holder" instance=ExtResource("6_f73j4")]
+[node name="element_button3" parent="elemnt_sel/element_selector/VBoxContainer/HBoxContainer/ScrollContainer/element_button_holder" instance=ExtResource("6_f73j4")]
 layout_mode = 2
 
-[node name="element_button9" parent="elemnt_sel/element_selector/HBoxContainer/ScrollContainer/element_button_holder" instance=ExtResource("6_f73j4")]
+[node name="element_button9" parent="elemnt_sel/element_selector/VBoxContainer/HBoxContainer/ScrollContainer/element_button_holder" instance=ExtResource("6_f73j4")]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="elemnt_sel/element_selector/HBoxContainer"]
+[node name="Control" type="Control" parent="elemnt_sel/element_selector/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(5, 0)
 layout_mode = 2
+
+[node name="Panel" type="Panel" parent="elemnt_sel/element_selector/VBoxContainer"]
+custom_minimum_size = Vector2(0, 35)
+layout_mode = 2
+
+[node name="root_offsets" type="Control" parent="elemnt_sel/element_selector/VBoxContainer/Panel"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("12_llcwn")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="elemnt_sel/element_selector/VBoxContainer/Panel/root_offsets"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 234.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="elemnt_sel/element_selector/VBoxContainer/Panel/root_offsets/HBoxContainer"]
+layout_mode = 2
+text = "   root pos"
+
+[node name="ro_px" type="LineEdit" parent="elemnt_sel/element_selector/VBoxContainer/Panel/root_offsets/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/minimum_character_width = 2
+text = "0"
+alignment = 1
+
+[node name="ro_py" type="LineEdit" parent="elemnt_sel/element_selector/VBoxContainer/Panel/root_offsets/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/minimum_character_width = 2
+text = "0"
+alignment = 1
+
+[node name="Label2" type="Label" parent="elemnt_sel/element_selector/VBoxContainer/Panel/root_offsets/HBoxContainer"]
+layout_mode = 2
+text = "  scl"
+
+[node name="ro_sx" type="LineEdit" parent="elemnt_sel/element_selector/VBoxContainer/Panel/root_offsets/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/minimum_character_width = 2
+text = "1"
+alignment = 1
+
+[node name="ro_sy" type="LineEdit" parent="elemnt_sel/element_selector/VBoxContainer/Panel/root_offsets/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/minimum_character_width = 2
+text = "1"
+alignment = 1
 
 [node name="elemnt_props" type="Window" parent="."]
 auto_translate_mode = 1
@@ -598,7 +684,7 @@ text = "delete"
 auto_translate_mode = 1
 title = "Keyframe Vis"
 position = Vector2i(700, 550)
-size = Vector2i(275, 50)
+size = Vector2i(425, 50)
 theme_override_icons/close = ExtResource("6_kt164")
 theme_override_icons/close_pressed = ExtResource("6_kt164")
 script = ExtResource("6_vu4yg")
@@ -648,12 +734,12 @@ layout_mode = 2
 
 [node name="kfBatchEditor" type="Window" parent="."]
 title = "KFA Batch"
-position = Vector2i(1000, 325)
+position = Vector2i(1000, 225)
 size = Vector2i(125, 275)
 theme_override_icons/close = ExtResource("6_kt164")
 theme_override_icons/close_pressed = ExtResource("6_kt164")
 script = ExtResource("6_vu4yg")
-base_position = Vector2(40, 13)
+base_position = Vector2(40, 9)
 
 [node name="batch_editor" type="Control" parent="kfBatchEditor"]
 layout_mode = 3
@@ -1138,6 +1224,30 @@ theme_override_font_sizes/font_size = 14
 placeholder_text = "character"
 alignment = 1
 
+[node name="Window" type="Window" parent="."]
+title = "animMap"
+position = Vector2i(1000, 100)
+size = Vector2i(125, 75)
+theme_override_icons/close = ExtResource("6_kt164")
+theme_override_icons/close_pressed = ExtResource("6_kt164")
+script = ExtResource("6_vu4yg")
+base_position = Vector2(40, 4)
+
+[node name="animMapBuilder" type="Control" parent="Window"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("19_2k8yd")
+
+[node name="copyAnimMap" type="Button" parent="Window/animMapBuilder"]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+text = "Copy animMap"
+
 [node name="kanimaViewer" type="Window" parent="."]
 title = "KANIM Viewer"
 position = Vector2i(25, 100)
@@ -1329,11 +1439,13 @@ button_pressed = true
 [connection signal="pressed" from="HBoxContainer/Button3" to="animationsEditor/animation_master" method="on_save_pressed"]
 [connection signal="pressed" from="HBoxContainer/loadrig" to="." method="_on_load_rig_pressed"]
 [connection signal="pressed" from="HBoxContainer/saverig" to="." method="_on_save_rig_pressed"]
+[connection signal="pressed" from="HBoxContainer/exportKAB" to="." method="_on_export_kab_pressed"]
 [connection signal="pressed" from="HBoxContainer/Button6" to="." method="_on_load_keys_pressed"]
 [connection signal="pressed" from="HBoxContainer/Button7" to="." method="_on_save_keys_pressed"]
 [connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]
 [connection signal="file_selected" from="AnimDialogue" to="." method="_on_anim_dialogue_file_selected"]
 [connection signal="file_selected" from="SaveDialogue" to="animationsEditor/animation_master" method="_on_save_dialogue_file_selected"]
+[connection signal="file_selected" from="exportKABDialogue" to="." method="_on_export_kab_dialogue_file_selected"]
 [connection signal="file_selected" from="SaveRigDialogue" to="." method="_on_save_rig_dialogue_file_selected"]
 [connection signal="file_selected" from="LoadRigDialogue" to="." method="_on_load_rig_dialogue_file_selected"]
 [connection signal="file_selected" from="SaveKfasDialogue" to="." method="_on_save_kfas_dialogue_file_selected"]
@@ -1374,6 +1486,7 @@ button_pressed = true
 [connection signal="pressed" from="keyframesEditor/keyframes_master/VBoxContainer/kfa_tools/kfs_delete" to="keyframesEditor/keyframes_master" method="_on_kfs_delete_pressed"]
 [connection signal="pressed" from="keyframesEditor/keyframes_master/VBoxContainer/kfa_tools/kfs_append" to="keyframesEditor/keyframes_master" method="_on_kfs_append_pressed"]
 [connection signal="text_submitted" from="kfaData/kfa_data_editor/VBoxContainer/rootname" to="kfaData/kfa_data_editor" method="_on_rootname_text_submitted"]
+[connection signal="pressed" from="Window/animMapBuilder/copyAnimMap" to="Window/animMapBuilder" method="_on_copy_anim_map_pressed"]
 [connection signal="value_changed" from="kanimaViewer/Control2/Control/HScrollBar" to="." method="_on_viewer_h_scroll_bar_value_changed"]
 [connection signal="value_changed" from="kanimaViewer/Control2/Control/VScrollBar" to="." method="_on_viewer_v_scroll_bar_value_changed"]
 [connection signal="value_changed" from="kanimaViewer/Control2/anim_resize" to="." method="_on_anim_resize_value_changed"]

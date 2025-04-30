@@ -262,11 +262,11 @@ var bake_result = {}
 
 func bake_kfa():
 	var anim_name = GAME.keyframes_master.current_anim
-	bake_result = {"name" = anim_name, "root" = "", "firstframe" = 0, "frames" = {}}
+	bake_result = {"name" = anim_name, "firstframe" = 0, "frames" = {}}
 	bake_result["numframes"] = GAME.keyframe_data[anim_name]["numframes"]
 	bake_result["framerate"] = GAME.keyframe_data[anim_name]["framerate"]
-	GAME.animation_data[anim_name] = bake_result
-	#GAME.animation_data[anim_name]
+	bake_result["root"] = GAME.keyframe_data[anim_name]["root"]
+	#GAME.animation_data[anim_name] = bake_result #holdover from direct bakes
 	bake_length = bake_result["numframes"]
 	bake_name = anim_name
 	bake_frame = 0
@@ -277,6 +277,20 @@ func bake_kfa():
 	#set_options()
 #%SaveDialogue.popup()
 
+func save_bakes():
+	var dir_list = []
+	var directions = GAME.keyframe_data[bake_name]["dirs"]
+	for dir in directions:
+		if directions[dir] == true:
+			dir_list.append(dir)
+	if dir_list.size() == 0: #bake the exact name if there's no dirs
+		GAME.animation_data[bake_name] = bake_result
+	else:
+		for dir in dir_list:
+			var bake_name_dir = bake_name + "_" + dir + "_" #the trailing _ isnt always there idk if it's needed
+			GAME.animation_data[bake_name_dir] = bake_result.duplicate(true)
+			GAME.animation_data[bake_name_dir]["name"] = bake_name_dir
+
 func _process(delta):
 	if baking:
 		if bake_frame < bake_length:
@@ -284,7 +298,7 @@ func _process(delta):
 			bake_frame += 1
 		else:
 			baking = false
-			GAME.animation_data[bake_name] = bake_result
+			save_bakes()
 			set_options()
 		
 	elif playing:

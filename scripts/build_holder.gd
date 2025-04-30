@@ -71,7 +71,7 @@ func parse_symbol_frames(xml: XMLParser, sprite: KANIMSprite, image_directory: S
 			if image.load(image_path) == OK:
 				var texture = ImageTexture.new()
 				texture.set_image(image)
-				var sprite_data = {"texture" = texture, "w" = frame_data.w, "h" = frame_data.h, "x" = frame_data.x, "y" = frame_data.y}
+				var sprite_data = {"texture" = texture, "sprite_name" = image_file, "w" = frame_data.w, "h" = frame_data.h, "x" = frame_data.x, "y" = frame_data.y}
 				sprite.add_frame(sprite_data)
 				#some eles have many frames, so i'm appending them here
 

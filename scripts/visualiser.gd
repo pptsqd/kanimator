@@ -73,8 +73,8 @@ func set_modifiers():
 		#bounds_size = max(bounds_high - bounds_low, 5)
 	elif attribute == "scl_x" or attribute == "scl_y":
 		bounds_high = 2
-		bounds_low = 0
-		bounds_size = 2
+		bounds_low = -2
+		bounds_size = 4
 	elif attribute == "vis":
 		bounds_high = 1.5
 		bounds_low = -0.5

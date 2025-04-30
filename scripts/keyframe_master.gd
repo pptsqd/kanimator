@@ -114,7 +114,7 @@ func deep_kfa_copy(source_dict,target_dict,from_name,to_name,extra_data):
 	target_dict[to_name] = {"framerate" = source_dict[from_name]["framerate"],"numframes" = source_dict[from_name]["numframes"]}
 	if source_dict[from_name].has("root"):
 		target_dict[to_name]["root"] = source_dict[from_name]["root"]
-		target_dict[to_name]["dirs"] = source_dict[from_name]["dirs"]
+		target_dict[to_name]["dirs"] = source_dict[from_name]["dirs"].duplicate(true)
 	var paste_offset = 0
 	var range = false
 	var range_start = 0
@@ -126,7 +126,7 @@ func deep_kfa_copy(source_dict,target_dict,from_name,to_name,extra_data):
 				target_dict[to_name][nodename][attr] = {}
 				for key_num in source_dict[from_name][nodename][attr]:
 					#if range == false or (key_num >= range_start and key_num <= range_end): 
-					target_dict[to_name][nodename][attr][int(key_num)+paste_offset] = source_dict[from_name][nodename][attr][key_num]
+					target_dict[to_name][nodename][attr][int(key_num)+paste_offset] = source_dict[from_name][nodename][attr][key_num].duplicate(true)
 					#making sure the frame num key is an int to make maths easy
 
 func kfa_append(source_dict,target_dict,from_name,to_name,extra_data):
