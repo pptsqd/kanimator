@@ -12,6 +12,7 @@ func _ready():
 	GAME.build_holder = %kanim_root
 	GAME.element_selector = %element_selector
 	GAME.keyframes_master = %keyframes_master
+	GAME.kfa_data_editor = %kfa_data_editor
 
 @onready var tile = %tile
 @onready var portrait_bounds = %portrait_bounds

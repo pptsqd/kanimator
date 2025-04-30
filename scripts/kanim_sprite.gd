@@ -98,7 +98,6 @@ func set_transforms(frame_data):
 		Vector2(frame_data.m1_tx, frame_data.m1_ty) # Translation
 	)
 	transform = temp_transform
-	print(transform)
 	set_frame(frame_data.frame)
 	
 func set_from_kfa(frame_num, anim_name):

@@ -97,9 +97,10 @@ func bake_kfa_frame(anim_name, idx):
 	#we're loading the kfa anim frame then for each element we bake its transforms
 	#var element_data = processed_data["frames"][frame][element]
 	idx = str(idx) #force string cuz the baked ones use strings
-	GAME.animation_data[anim_name]["frames"][idx] = {}
+	#GAME.animation_data[anim_name]["frames"][idx] = {}
+	GAME.animation_master.bake_result["frames"][idx] = {}
 	for element in build_nodes:
 		#GAME.animation_data[anim_name]["frames"][idx][element.name] = {"name" : element.name}
 		var bake_res = element.get_baked_transforms()
 		if bake_res != {}:
-			GAME.animation_data[anim_name]["frames"][idx][element.name] = bake_res
+			GAME.animation_master.bake_result["frames"][idx][element.name] = bake_res

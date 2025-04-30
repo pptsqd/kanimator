@@ -5,6 +5,36 @@ extends Control
 
 var anim_list = []
 
+var anim_names = []
+
+#
+#func _ready():
+	#open_all_anim_files()
+	
+func open_all_anim_files():
+	#this is a tool for getting all the anim names, only needed it once but here in case
+	var folder_dir = ""
+	var dir = DirAccess.open(folder_dir)
+	if dir:
+		dir.list_dir_begin()
+		var subfolder = dir.get_next()
+		while subfolder != "":
+			if dir.current_is_dir():
+				var file_path = folder_dir + subfolder + "/animation.xml"
+				if FileAccess.file_exists(file_path):
+					var file = FileAccess.open(file_path, FileAccess.READ)
+					print("filepath: ", file_path)
+					anim_names.append("#" + subfolder)
+					import_animation(file_path)
+			subfolder = dir.get_next()
+		dir.list_dir_end()
+	
+	print(anim_names)
+	var current_clipboard = DisplayServer.clipboard_get()
+	DisplayServer.clipboard_set(str(anim_names)) #pop it in the clipboard
+
+
+
 @onready var option_button = %OptionButton
 
 func set_options():
@@ -59,6 +89,13 @@ func import_animation(file_path: String):
 				
 				#add the data to the dict with anim_name as a key
 				anim_data[anim_name] = {"name" = anim_name, "root" = anim_root, "numframes" = numframes, "firstframe" = 9999999999, "framerate" = framerate, "frames" = frames}
+				#add name to list of names
+				var clean_name = anim_name
+				var directions = ["_SW_", "_NE_", "_SE_", "_SW_", "_S_", "_E_"]
+				for dir in directions: 
+					clean_name = clean_name.replace(dir, '')
+				if not anim_names.has(clean_name):
+					anim_names.append(clean_name)
 				
 			"frame":
 				#we're really just getting the index for each frame here.
@@ -221,11 +258,11 @@ var baking = false
 var bake_frame = 0
 var bake_length = 0
 var bake_name = ""
-#var bake_result = {}
+var bake_result = {}
 
 func bake_kfa():
 	var anim_name = GAME.keyframes_master.current_anim
-	var bake_result = {"name" = anim_name, "root" = "", "firstframe" = 0, "frames" = {}}
+	bake_result = {"name" = anim_name, "root" = "", "firstframe" = 0, "frames" = {}}
 	bake_result["numframes"] = GAME.keyframe_data[anim_name]["numframes"]
 	bake_result["framerate"] = GAME.keyframe_data[anim_name]["framerate"]
 	GAME.animation_data[anim_name] = bake_result
@@ -247,7 +284,7 @@ func _process(delta):
 			bake_frame += 1
 		else:
 			baking = false
-			#GAME.animation_data[bake_name] = bake_result
+			GAME.animation_data[bake_name] = bake_result
 			set_options()
 		
 	elif playing:
