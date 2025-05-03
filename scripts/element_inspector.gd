@@ -7,6 +7,7 @@ extends Control
 @onready var spin_scl_x = %spin_sclx
 @onready var spin_scl_y = %spin_scly
 @onready var spin_idx = %spin_idx
+@onready var spin_skw = %spin_skw
 @onready var chk_vis = %chk_vis
 @onready var parent_selector : OptionButton = %parentselector
 var current_target : KANIMSprite
@@ -38,6 +39,7 @@ func _process(delta):
 		spin_pos_x.set_value_no_signal(current_target.position.x)
 		spin_pos_y.set_value_no_signal(-current_target.position.y)
 		spin_rot.set_value_no_signal(current_target.rotation_degrees)
+		spin_skw.set_value_no_signal(current_target.skew)
 		spin_scl_x.set_value_no_signal(current_target.scale.x)
 		spin_scl_y.set_value_no_signal(current_target.scale.y)
 		spin_idx.set_value_no_signal(current_target.frame)
@@ -70,3 +72,8 @@ func _on_spin_idx_value_changed(value):
 func _on_chk_vis_toggled(toggled_on):
 	if is_instance_valid(current_target):
 		current_target.set_sprite_vis(toggled_on)
+
+
+func _on_spin_skw_value_changed(value):
+	if is_instance_valid(current_target):
+		current_target.skew = value

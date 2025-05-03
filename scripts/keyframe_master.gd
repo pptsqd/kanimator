@@ -92,7 +92,7 @@ func load_kfas():
 func create_keyframe_basis(node_name, animname):
 	if not GAME.keyframe_data[animname].has(node_name):
 		GAME.keyframe_data[animname][node_name] = {}
-	var poss_keys = ["pos_x", "pos_y", "rot", "scl_x", "scl_y", "idx", "vis"]
+	var poss_keys = GAME.attr_types
 	for attr_name in poss_keys:
 		if not GAME.keyframe_data[animname][node_name].has(attr_name):
 			GAME.keyframe_data[animname][node_name][attr_name] = {}
@@ -161,6 +161,8 @@ func edit_keyframe(node_name, attr_name, key_data, blend_type, key_num):
 	if str(blend_type) == "delete":
 		GAME.keyframe_data[GAME.current_keyframe_animname][node_name][attr_name].erase(key_num)
 	else:
+		if not GAME.keyframe_data[GAME.current_keyframe_animname][node_name].has(attr_name):
+			GAME.keyframe_data[GAME.current_keyframe_animname][node_name][attr_name] = {}
 		GAME.keyframe_data[GAME.current_keyframe_animname][node_name][attr_name][int(key_num)] = {"value" : key_data, "blend" : blend_type}
 
 func set_keyframe(data):
@@ -175,6 +177,8 @@ func set_keyframe(data):
 		edit_keyframe(node_name, "pos_y", node.position.y, data.pos_y, key_num)
 	if data.has("rot"):
 		edit_keyframe(node_name, "rot", node.rotation_degrees, data.rot, key_num)
+	if data.has("skw"):
+		edit_keyframe(node_name, "skw", node.skew, data.skw, key_num)
 	if data.has("scl_x"):
 		edit_keyframe(node_name, "scl_x", node.scale.x, data.scl_x, key_num)
 	if data.has("scl_y"):
@@ -187,7 +191,7 @@ func set_keyframe(data):
 
 func _on_set_global_kf_pressed():
 	for node in GAME.build_holder.build_nodes:
-		set_keyframe({"node_name" : node.name, "pos_x" : 0, "pos_y" : 0, "rot" : 0, "scl_x" : 0, "scl_y" : 0, "idx" : 0, "vis" : 0})
+		set_keyframe({"node_name" : node.name, "pos_x" : 0, "pos_y" : 0, "rot" : 0, "skw" : 0, "scl_x" : 0, "scl_y" : 0, "idx" : 0, "vis" : 0})
 	#print(GAME.keyframe_data)
 
 

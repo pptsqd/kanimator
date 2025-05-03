@@ -75,6 +75,10 @@ func set_modifiers():
 		bounds_high = 2
 		bounds_low = -2
 		bounds_size = 4
+	elif  attribute == "skw":
+		bounds_high = .1
+		bounds_low = -.1
+		bounds_size = .2
 	elif attribute == "vis":
 		bounds_high = 1.5
 		bounds_low = -0.5

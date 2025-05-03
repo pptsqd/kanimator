@@ -20,7 +20,7 @@ var current_keyframe_animname = ""
 
 const blend_types = ["linear", "ease_in_out", "ease_in", "ease_out", "stepped"]
 const ease_types = ["sine", "cubic", "circ", "quart", "quint"]
-const attr_types = ["pos_x", "pos_y", "rot", "scl_x", "scl_y", "idx", "vis"]
+const attr_types = ["pos_x", "pos_y", "rot", "skw", "scl_x", "scl_y", "idx", "vis"]
 var current_focus_attr = "pos_x"
 
 const default_dirs = {"N":false, "NE":false, "E":false, "SE":false, "S":false, "SW":false, "W":false, "NW":false}

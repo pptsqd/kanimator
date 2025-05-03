@@ -41,6 +41,9 @@ func set_frame(n):
 	animated_sprite.position = offset
 	return true
 
+
+
+
 func set_transforms_worldspace(frame_data):
 	#this updated version of set_transforms will ignore parenting information, allowing us to load existing anims onto rigs
 	var temp_transform = Transform2D(
@@ -50,6 +53,15 @@ func set_transforms_worldspace(frame_data):
 	)
 	global_transform = temp_transform  # since the scene is rendered through rendercam I don't need to do clever stuff!
 	set_frame(frame_data.frame)
+	#oh no i regret saying I dont need to do clever stuff...
+	if false and scale.y < 0 and (rotation_degrees > 90 or rotation_degrees < -90):
+		#turns out you can't -1*scaleX in transforms, so i'm gonna brute force it back into place here!
+		scale.y *= -1
+		scale.x *=-1
+		rotation_degrees -= 180
+		var offset_dir = Vector2.from_angle(-rotation)
+		offset_dir = Vector2(offset_dir.y,offset_dir.x).normalized()
+		position -= offset_dir * (float(frames_info[frame].y))
 
 func propagate_baked_world(frame_data, its):
 	var itsnew = its - 1
@@ -109,6 +121,8 @@ func set_from_kfa(frame_num, anim_name):
 			position.y = GAME.keyframes_master.get_kfa_data(name, "pos_y", frame_num)
 		if GAME.keyframe_data[anim_name][name].has("rot"):
 			rotation_degrees = GAME.keyframes_master.get_kfa_data(name, "rot", frame_num)
+		if GAME.keyframe_data[anim_name][name].has("skw"):
+			skew = GAME.keyframes_master.get_kfa_data(name, "skw", frame_num)
 		if GAME.keyframe_data[anim_name][name].has("scl_x"):
 			scale.x = GAME.keyframes_master.get_kfa_data(name, "scl_x", frame_num)
 		else:

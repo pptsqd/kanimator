@@ -286,10 +286,16 @@ func save_bakes():
 	if dir_list.size() == 0: #bake the exact name if there's no dirs
 		GAME.animation_data[bake_name] = bake_result
 	else:
+		#for dir in dir_list:
+			#var bake_name_dir = bake_name + "_" + dir + "_" #the trailing _ isnt always there idk if it's needed
+			#GAME.animation_data[bake_name_dir] = bake_result.duplicate(true)
+			#GAME.animation_data[bake_name_dir]["name"] = bake_name_dir
+			
+		var bake_name_dir = bake_name.get_slice("~",0) + "_" #this ver would make a single anim instead of one each, idk if it's better
 		for dir in dir_list:
-			var bake_name_dir = bake_name + "_" + dir + "_" #the trailing _ isnt always there idk if it's needed
-			GAME.animation_data[bake_name_dir] = bake_result.duplicate(true)
-			GAME.animation_data[bake_name_dir]["name"] = bake_name_dir
+			bake_name_dir = bake_name_dir + dir + "_" #the trailing _ isnt always there idk if it's needed
+		GAME.animation_data[bake_name_dir] = bake_result.duplicate(true)
+		GAME.animation_data[bake_name_dir]["name"] = bake_name_dir
 
 func _process(delta):
 	if baking:

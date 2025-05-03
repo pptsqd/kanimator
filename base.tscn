@@ -481,7 +481,7 @@ offset_left = 10.0
 offset_top = 5.0
 offset_right = 66.0
 offset_bottom = 28.0
-text = "rot"
+text = "rot, skw"
 
 [node name="spin_rot" type="SpinBox" parent="elemnt_props/element_inspector/VBoxContainer/GridContainer/Control2"]
 unique_name_in_owner = true
@@ -494,6 +494,19 @@ max_value = 500.0
 step = 0.01
 alignment = 1
 custom_arrow_step = 1.0
+
+[node name="spin_skw" type="SpinBox" parent="elemnt_props/element_inspector/VBoxContainer/GridContainer/Control2"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 160.0
+offset_right = 243.063
+offset_bottom = 31.0
+min_value = -1.5
+max_value = 1.5
+step = 0.01
+value = 0.5
+alignment = 1
+custom_arrow_step = 0.01
 
 [node name="Control5" type="Control" parent="elemnt_props/element_inspector/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(200, 35)
@@ -814,13 +827,13 @@ theme_override_constants/minimum_character_width = 2
 custom_minimum_size = Vector2(0, 2)
 layout_mode = 2
 
-[node name="kfa_pad" type="Button" parent="kfBatchEditor/batch_editor/VBoxContainer"]
-layout_mode = 2
-text = "pad frames"
-
 [node name="HBoxContainer3" type="HBoxContainer" parent="kfBatchEditor/batch_editor/VBoxContainer"]
 clip_contents = true
 layout_mode = 2
+
+[node name="kfa_pad" type="Button" parent="kfBatchEditor/batch_editor/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "   pad   "
 
 [node name="Label2" type="Label" parent="kfBatchEditor/batch_editor/VBoxContainer/HBoxContainer3"]
 layout_mode = 2
@@ -833,14 +846,30 @@ size_flags_horizontal = 9
 theme_override_constants/minimum_character_width = 2
 
 [node name="Label" type="Label" parent="kfBatchEditor/batch_editor/VBoxContainer/HBoxContainer3"]
+visible = false
 layout_mode = 2
 text = "at"
 
 [node name="kfa_pad_at" type="LineEdit" parent="kfBatchEditor/batch_editor/VBoxContainer/HBoxContainer3"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 size_flags_horizontal = 9
 theme_override_constants/minimum_character_width = 2
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="kfBatchEditor/batch_editor/VBoxContainer"]
+clip_contents = true
+layout_mode = 2
+
+[node name="kfa_del_before" type="Button" parent="kfBatchEditor/batch_editor/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+focus_mode = 0
+text = " <| del"
+
+[node name="kfa_del_after" type="Button" parent="kfBatchEditor/batch_editor/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+focus_mode = 0
+text = "del |> "
 
 [node name="kfa_pad_all" type="CheckBox" parent="kfBatchEditor/batch_editor/VBoxContainer"]
 unique_name_in_owner = true
@@ -1453,6 +1482,7 @@ button_pressed = true
 [connection signal="value_changed" from="elemnt_props/element_inspector/VBoxContainer/GridContainer/Control/spin_pos_x" to="elemnt_props/element_inspector" method="_on_spin_pos_x_value_changed"]
 [connection signal="value_changed" from="elemnt_props/element_inspector/VBoxContainer/GridContainer/Control/spin_pos_y" to="elemnt_props/element_inspector" method="_on_spin_pos_y_value_changed"]
 [connection signal="value_changed" from="elemnt_props/element_inspector/VBoxContainer/GridContainer/Control2/spin_rot" to="elemnt_props/element_inspector" method="_on_spin_rot_value_changed"]
+[connection signal="value_changed" from="elemnt_props/element_inspector/VBoxContainer/GridContainer/Control2/spin_skw" to="elemnt_props/element_inspector" method="_on_spin_skw_value_changed"]
 [connection signal="value_changed" from="elemnt_props/element_inspector/VBoxContainer/GridContainer/Control5/spin_sclx" to="elemnt_props/element_inspector" method="_on_spin_scl_value_changed"]
 [connection signal="value_changed" from="elemnt_props/element_inspector/VBoxContainer/GridContainer/Control5/spin_scly" to="elemnt_props/element_inspector" method="_on_spin_scl_value_changed"]
 [connection signal="value_changed" from="elemnt_props/element_inspector/VBoxContainer/GridContainer/Control3/spin_idx" to="elemnt_props/element_inspector" method="_on_spin_idx_value_changed"]
@@ -1465,7 +1495,9 @@ button_pressed = true
 [connection signal="pressed" from="keyframe_attrs/keyframe_inspector/VBoxContainer/HBoxContainer2/kf_delete" to="keyframe_attrs/keyframe_inspector" method="_on_kf_delete_pressed"]
 [connection signal="pressed" from="kfBatchEditor/batch_editor/VBoxContainer/set_global_kf" to="keyframesEditor/keyframes_master" method="_on_set_global_kf_pressed"]
 [connection signal="text_submitted" from="kfBatchEditor/batch_editor/VBoxContainer/HBoxContainer2/kfa_batchEdit" to="kfBatchEditor/batch_editor" method="_on_kfa_batch_edit_text_submitted"]
-[connection signal="pressed" from="kfBatchEditor/batch_editor/VBoxContainer/kfa_pad" to="kfBatchEditor/batch_editor" method="_on_kfa_pad_pressed"]
+[connection signal="pressed" from="kfBatchEditor/batch_editor/VBoxContainer/HBoxContainer3/kfa_pad" to="kfBatchEditor/batch_editor" method="_on_kfa_pad_pressed"]
+[connection signal="pressed" from="kfBatchEditor/batch_editor/VBoxContainer/HBoxContainer4/kfa_del_before" to="kfBatchEditor/batch_editor" method="_on_kfa_del_before_pressed"]
+[connection signal="pressed" from="kfBatchEditor/batch_editor/VBoxContainer/HBoxContainer4/kfa_del_after" to="kfBatchEditor/batch_editor" method="_on_kfa_del_after_pressed"]
 [connection signal="item_selected" from="animationsEditor/animation_master/VBoxContainer/HBoxContainer3/OptionButton" to="animationsEditor/animation_master" method="_on_baked_anim_selected"]
 [connection signal="pressed" from="animationsEditor/animation_master/VBoxContainer/kf_controls/baked_bwd" to="animationsEditor/animation_master" method="_on_baked_bwd_pressed"]
 [connection signal="pressed" from="animationsEditor/animation_master/VBoxContainer/kf_controls/bkd_Apply" to="animationsEditor/animation_master" method="_on_apply_pressed"]
