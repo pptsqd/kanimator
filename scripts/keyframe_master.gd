@@ -156,6 +156,7 @@ func kfa_append(source_dict,target_dict,from_name,to_name,extra_data):
 
 func edit_keyframe(node_name, attr_name, key_data, blend_type, key_num):
 	#print(node_name)
+	GAME.save_history()
 	if not GAME.keyframe_data[GAME.current_keyframe_animname].has(node_name):
 		create_keyframe_basis(node_name, GAME.current_keyframe_animname)
 	if str(blend_type) == "delete":

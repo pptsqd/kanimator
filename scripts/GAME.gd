@@ -24,3 +24,14 @@ const attr_types = ["pos_x", "pos_y", "rot", "skw", "scl_x", "scl_y", "idx", "vi
 var current_focus_attr = "pos_x"
 
 const default_dirs = {"N":false, "NE":false, "E":false, "SE":false, "S":false, "SW":false, "W":false, "NW":false}
+
+
+var KFA_history = []
+func save_history():
+	KFA_history.append(keyframe_data.duplicate(true))
+	if KFA_history.size() > 50:
+		KFA_history.pop_front()
+
+func undo_KFA():
+	if KFA_history.size() > 1:
+		keyframe_data = KFA_history.pop_back()

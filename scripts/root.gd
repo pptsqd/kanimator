@@ -22,7 +22,10 @@ func _process(delta):
 	portrait_bounds.visible = %show_bounds.button_pressed
 	tile.visible = %show_tile.button_pressed
 
-
+func _unhandled_input(event):
+	if event is InputEventKey:
+		if event.pressed and event.keycode == KEY_Z and Input.is_key_pressed(KEY_CTRL):
+			GAME.undo_KFA()
 
 func _on_file_dialog_file_selected(path):
 	print(path)
