@@ -64,7 +64,7 @@ func _on_new_animname_text_submitted(new_text):
 	#print(new_text)
 	new_anim_name.text = ""
 	if not GAME.keyframe_data.has(new_text):
-		GAME.keyframe_data[new_text] = {"numframes" : frame_count,"framerate" : frame_rate, "root" : "character", "dirs" : GAME.default_dirs.duplicate()}
+		GAME.keyframe_data[new_text] = {"numframes" : frame_count,"framerate" : frame_rate, "data" : {"root" : "character", "dirs" : GAME.default_dirs.duplicate()}}
 		%keyframeanim_selector.add_item(new_text, -1)
 		for node in GAME.build_holder.build_nodes:
 			create_keyframe_basis(node.name, new_text)

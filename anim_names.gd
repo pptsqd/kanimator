@@ -126,7 +126,7 @@ var anim_names = [
 	#shared_basic_c_04.anim 
 	"overwatch_melee_pre", 
 	"overwatch_melee", 
-	"overwatch_melee_pre", 
+	"overwatch_melee_pst", 
 	#shared_basic_c_05.anim
 	"lean_meleeoverwatch", 
 	#"overwatchcrouch_mel", 

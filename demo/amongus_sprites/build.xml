@@ -13,6 +13,10 @@
     <Frame framenum="6" duration="1" image="body_knees" w="100" h="150" x="0.0" y="-50"  />
     <Frame framenum="7" duration="1" image="body_dragged" w="100" h="150" x="0.0" y="-50"  />
   </Symbol>
+  <Symbol name="corpse">
+    <Frame framenum="0" duration="1" image="dead_griffin" w="150" h="150" x="0.0" y="-15"  />
+    <Frame framenum="1" duration="1" image="dead_yamcha" w="150" h="150" x="0.0" y="-15"  />
+  </Symbol>
   <Symbol name="hand_weapon">
     <Frame framenum="0" duration="1" image="hand_knife" w="60" h="60" x="0" y="0"  />
     <Frame framenum="1" duration="1" image="hand_gun" w="60" h="60" x="0" y="0"  />
