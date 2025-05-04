@@ -81,6 +81,8 @@ func change_kfanim(name):
 	%kfa_tools.set_locked(false)
 	kfa_num_frame_spin.set_value(GAME.keyframe_data[name]["numframes"])
 	kfa_frame_rate_spin.set_value(GAME.keyframe_data[name]["framerate"])
+	for node in GAME.build_holder.build_nodes:
+		create_keyframe_basis(node.name, current_anim) #kina dirty but in case the user adds build data (like I did)
 	GAME.kfa_data_editor.update()
 
 func load_kfas():
@@ -112,15 +114,19 @@ func clone_kfa(new_animname):
 func deep_kfa_copy(source_dict,target_dict,from_name,to_name,extra_data):
 	#a standard duplicate leaves sub-values linked, this is a brand new dict being made
 	target_dict[to_name] = {"framerate" = source_dict[from_name]["framerate"],"numframes" = source_dict[from_name]["numframes"]}
-	if source_dict[from_name].has("root"):
-		target_dict[to_name]["root"] = source_dict[from_name]["root"]
-		target_dict[to_name]["dirs"] = source_dict[from_name]["dirs"].duplicate(true)
+	if source_dict[from_name].has("data"):
+		target_dict[to_name]["data"] = source_dict[from_name]["data"].duplicate(true)
+	else:
+		target_dict[to_name]["data"] = {}
+	if source_dict[from_name].has("root"): #legacy for cloning older kfa files
+		target_dict[to_name]["data"]["root"] = source_dict[from_name]["root"]
+		target_dict[to_name]["data"]["dirs"] = source_dict[from_name]["dirs"].duplicate(true)
 	var paste_offset = 0
 	var range = false
 	var range_start = 0
 	var range_end = 0
 	for nodename in source_dict[from_name]:
-		if not ["framerate","numframes","root","dirs"].has(nodename):
+		if not ["framerate","numframes","root","dirs","data"].has(nodename):
 			target_dict[to_name][nodename] = {}
 			for attr in source_dict[from_name][nodename]:
 				target_dict[to_name][nodename][attr] = {}

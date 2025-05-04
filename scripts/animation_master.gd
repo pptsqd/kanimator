@@ -255,21 +255,26 @@ func _on_baked_play_pressed():
 		
 
 var baking = false
+var baking_flipped = false
 var bake_frame = 0
 var bake_length = 0
 var bake_name = ""
 var bake_result = {}
+var bake_list = []
+var bake_flipped_list = []
 
 func bake_kfa():
 	var anim_name = GAME.keyframes_master.current_anim
 	bake_result = {"name" = anim_name, "firstframe" = 0, "frames" = {}}
 	bake_result["numframes"] = GAME.keyframe_data[anim_name]["numframes"]
 	bake_result["framerate"] = GAME.keyframe_data[anim_name]["framerate"]
-	bake_result["root"] = GAME.keyframe_data[anim_name]["root"]
+	bake_result["root"] = GAME.keyframe_data[anim_name]["data"]["root"]
 	#GAME.animation_data[anim_name] = bake_result #holdover from direct bakes
 	bake_length = bake_result["numframes"]
 	bake_name = anim_name
 	bake_frame = 0
+	if baking_flipped:
+		%baker_flip.scale.x = -1
 	baking = true
 	#for frame in bake_result["numframes"]:
 		#GAME.build_holder.bake_kfa_frame(anim_name, frame)
@@ -279,23 +284,26 @@ func bake_kfa():
 
 func save_bakes():
 	var dir_list = []
-	var directions = GAME.keyframe_data[bake_name]["dirs"]
+	var directions = GAME.keyframe_data[bake_name]["data"]["dirs"]
 	for dir in directions:
 		if directions[dir] == true:
 			dir_list.append(dir)
 	if dir_list.size() == 0: #bake the exact name if there's no dirs
 		GAME.animation_data[bake_name] = bake_result
 	else:
-		#for dir in dir_list:
-			#var bake_name_dir = bake_name + "_" + dir + "_" #the trailing _ isnt always there idk if it's needed
-			#GAME.animation_data[bake_name_dir] = bake_result.duplicate(true)
-			#GAME.animation_data[bake_name_dir]["name"] = bake_name_dir
-			
-		var bake_name_dir = bake_name.get_slice("~",0) + "_" #this ver would make a single anim instead of one each, idk if it's better
-		for dir in dir_list:
-			bake_name_dir = bake_name_dir + dir + "_" #the trailing _ isnt always there idk if it's needed
+		var bake_name_dir = bake_name.get_slice("~",0) + "_" #we can save them all in one file!
+		if baking_flipped:
+			bake_name_dir = bake_name_dir + "SW_"
+		else:
+			for dir in dir_list:
+				bake_name_dir = bake_name_dir + dir + "_" #the trailing _ isnt always there idk if it's needed
 		GAME.animation_data[bake_name_dir] = bake_result.duplicate(true)
 		GAME.animation_data[bake_name_dir]["name"] = bake_name_dir
+	if baking_flipped and bake_flipped_list.size() == 0:
+		baking_flipped = false
+		%baker_flip.scale.x = 1
+
+
 
 func _process(delta):
 	if baking:
@@ -306,13 +314,20 @@ func _process(delta):
 			baking = false
 			save_bakes()
 			set_options()
-		
-	elif playing:
-		playing_delta += delta
-		if playing_delta > (1.0/frame_rate):
-			set_baked_frame(current_frame+1)
-			playing_delta -= 1.0/frame_rate
-			GAME.build_holder.load_frame(anim_list[current_anim], current_frame)
+	else:
+		if bake_list.size() > 0 and not baking:
+			GAME.keyframes_master.change_kfanim(bake_list.pop_front())
+			bake_kfa()
+		elif bake_flipped_list.size() > 0 and not baking:
+			baking_flipped = true
+			GAME.keyframes_master.change_kfanim(bake_flipped_list.pop_front())
+			bake_kfa()
+		if playing:
+			playing_delta += delta
+			if playing_delta > (1.0/frame_rate):
+				set_baked_frame(current_frame+1)
+				playing_delta -= 1.0/frame_rate
+				GAME.build_holder.load_frame(anim_list[current_anim], current_frame)
 		
 
 func _on_baked_anim_selected(index):
@@ -339,5 +354,17 @@ func _on_baked_fwd_pressed():
 	GAME.build_holder.load_frame(anim_list[current_anim], current_frame)
 
 
+func queue_anim_bake(name):
+	bake_list.append(name)
+	if GAME.keyframe_data[name]["data"].has("flipped_SW") and GAME.keyframe_data[name]["data"]["flipped_SW"]:
+		bake_flipped_list.append(name)
+		
+
 func _on_bake_anim_pressed():
-	bake_kfa()
+	#bake_kfa()
+	queue_anim_bake(GAME.keyframes_master.current_anim)
+
+func _on_bake_all_pressed():
+	for name in GAME.keyframe_data:
+		queue_anim_bake(name)
+		

@@ -262,17 +262,20 @@ modulate = Color(1, 1, 1, 0.219608)
 z_index = -500
 texture = ExtResource("5_hooqk")
 
-[node name="kanim_root" type="Node2D" parent="SubViewport"]
+[node name="baker_flip" type="Node2D" parent="SubViewport"]
+unique_name_in_owner = true
+
+[node name="kanim_root" type="Node2D" parent="SubViewport/baker_flip"]
 unique_name_in_owner = true
 script = ExtResource("1_hcp24")
 
-[node name="KANIMSprite" type="AnimatedSprite2D" parent="SubViewport/kanim_root"]
+[node name="KANIMSprite" type="AnimatedSprite2D" parent="SubViewport/baker_flip/kanim_root"]
 visible = false
 z_index = 4
 sprite_frames = SubResource("SpriteFrames_01ks7")
 script = ExtResource("3_q83om")
 
-[node name="Sprite2D" type="Sprite2D" parent="SubViewport/kanim_root"]
+[node name="Sprite2D" type="Sprite2D" parent="SubViewport/baker_flip/kanim_root"]
 unique_name_in_owner = true
 visible = false
 
@@ -747,12 +750,12 @@ layout_mode = 2
 
 [node name="kfBatchEditor" type="Window" parent="."]
 title = "KFA Batch"
-position = Vector2i(1000, 225)
-size = Vector2i(125, 275)
+position = Vector2i(1000, 200)
+size = Vector2i(125, 300)
 theme_override_icons/close = ExtResource("6_kt164")
 theme_override_icons/close_pressed = ExtResource("6_kt164")
 script = ExtResource("6_vu4yg")
-base_position = Vector2(40, 9)
+base_position = Vector2(40, 8)
 
 [node name="batch_editor" type="Control" parent="kfBatchEditor"]
 layout_mode = 3
@@ -775,6 +778,12 @@ grow_vertical = 2
 unique_name_in_owner = true
 layout_mode = 2
 text = "set global kf"
+
+[node name="btch_quick_flip" type="Button" parent="kfBatchEditor/batch_editor/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "quick flip"
 
 [node name="Panel" type="Panel" parent="kfBatchEditor/batch_editor/VBoxContainer"]
 custom_minimum_size = Vector2(0, 2)
@@ -874,12 +883,14 @@ text = "del |> "
 [node name="kfa_pad_all" type="CheckBox" parent="kfBatchEditor/batch_editor/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 12
 button_pressed = true
 text = "all elements"
 
 [node name="kfa_pad_vars" type="CheckBox" parent="kfBatchEditor/batch_editor/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 12
 button_pressed = true
 text = "all attributes"
 
@@ -963,9 +974,16 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "▶"
 
-[node name="bake_anim" type="Button" parent="animationsEditor/animation_master/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="animationsEditor/animation_master/VBoxContainer"]
 layout_mode = 2
-text = "Bake Current KFA"
+
+[node name="bake_anim" type="Button" parent="animationsEditor/animation_master/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Bake crr KFA"
+
+[node name="bake_anim2" type="Button" parent="animationsEditor/animation_master/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Bake all KFA"
 
 [node name="keyframesEditor" type="Window" parent="."]
 auto_translate_mode = 1
@@ -1130,6 +1148,7 @@ script = ExtResource("18_ka5ou")
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
+theme_override_constants/separation = 1
 
 [node name="direction_cbxs" type="GridContainer" parent="kfaData/kfa_data_editor/VBoxContainer"]
 unique_name_in_owner = true
@@ -1241,9 +1260,16 @@ layout_mode = 2
 focus_mode = 0
 theme_override_constants/icon_max_width = 14
 
+[node name="addFlipSW" type="CheckBox" parent="kfaData/kfa_data_editor/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 12
+text = "+ flip sw"
+
 [node name="Label" type="Label" parent="kfaData/kfa_data_editor/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 11
 text = " root name"
 
 [node name="rootname" type="LineEdit" parent="kfaData/kfa_data_editor/VBoxContainer"]
@@ -1253,16 +1279,16 @@ theme_override_font_sizes/font_size = 14
 placeholder_text = "character"
 alignment = 1
 
-[node name="Window" type="Window" parent="."]
+[node name="animMap" type="Window" parent="."]
 title = "animMap"
 position = Vector2i(1000, 100)
-size = Vector2i(125, 75)
+size = Vector2i(125, 50)
 theme_override_icons/close = ExtResource("6_kt164")
 theme_override_icons/close_pressed = ExtResource("6_kt164")
 script = ExtResource("6_vu4yg")
 base_position = Vector2(40, 4)
 
-[node name="animMapBuilder" type="Control" parent="Window"]
+[node name="animMapBuilder" type="Control" parent="animMap"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -1271,7 +1297,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("19_2k8yd")
 
-[node name="copyAnimMap" type="Button" parent="Window/animMapBuilder"]
+[node name="copyAnimMap" type="Button" parent="animMap/animMapBuilder"]
 layout_mode = 0
 offset_right = 8.0
 offset_bottom = 8.0
@@ -1503,7 +1529,8 @@ button_pressed = true
 [connection signal="pressed" from="animationsEditor/animation_master/VBoxContainer/kf_controls/bkd_Apply" to="animationsEditor/animation_master" method="_on_apply_pressed"]
 [connection signal="pressed" from="animationsEditor/animation_master/VBoxContainer/kf_controls/baked_fwd" to="animationsEditor/animation_master" method="_on_baked_fwd_pressed"]
 [connection signal="pressed" from="animationsEditor/animation_master/VBoxContainer/kf_controls/baked_play" to="animationsEditor/animation_master" method="_on_baked_play_pressed"]
-[connection signal="pressed" from="animationsEditor/animation_master/VBoxContainer/bake_anim" to="animationsEditor/animation_master" method="_on_bake_anim_pressed"]
+[connection signal="pressed" from="animationsEditor/animation_master/VBoxContainer/HBoxContainer/bake_anim" to="animationsEditor/animation_master" method="_on_bake_anim_pressed"]
+[connection signal="pressed" from="animationsEditor/animation_master/VBoxContainer/HBoxContainer/bake_anim2" to="animationsEditor/animation_master" method="_on_bake_all_pressed"]
 [connection signal="pressed" from="keyframesEditor/keyframes_master/Apply" to="keyframesEditor/keyframes_master" method="_on_apply_pressed"]
 [connection signal="item_selected" from="keyframesEditor/keyframes_master/VBoxContainer/HBoxContainer3/keyframeanim_selector" to="keyframesEditor/keyframes_master" method="_on_keyframeanim_selector_item_selected"]
 [connection signal="text_submitted" from="keyframesEditor/keyframes_master/VBoxContainer/HBoxContainer3/newAnimName" to="keyframesEditor/keyframes_master" method="_on_new_animname_text_submitted"]
@@ -1518,7 +1545,7 @@ button_pressed = true
 [connection signal="pressed" from="keyframesEditor/keyframes_master/VBoxContainer/kfa_tools/kfs_delete" to="keyframesEditor/keyframes_master" method="_on_kfs_delete_pressed"]
 [connection signal="pressed" from="keyframesEditor/keyframes_master/VBoxContainer/kfa_tools/kfs_append" to="keyframesEditor/keyframes_master" method="_on_kfs_append_pressed"]
 [connection signal="text_submitted" from="kfaData/kfa_data_editor/VBoxContainer/rootname" to="kfaData/kfa_data_editor" method="_on_rootname_text_submitted"]
-[connection signal="pressed" from="Window/animMapBuilder/copyAnimMap" to="Window/animMapBuilder" method="_on_copy_anim_map_pressed"]
+[connection signal="pressed" from="animMap/animMapBuilder/copyAnimMap" to="animMap/animMapBuilder" method="_on_copy_anim_map_pressed"]
 [connection signal="value_changed" from="kanimaViewer/Control2/Control/HScrollBar" to="." method="_on_viewer_h_scroll_bar_value_changed"]
 [connection signal="value_changed" from="kanimaViewer/Control2/Control/VScrollBar" to="." method="_on_viewer_v_scroll_bar_value_changed"]
 [connection signal="value_changed" from="kanimaViewer/Control2/anim_resize" to="." method="_on_anim_resize_value_changed"]
