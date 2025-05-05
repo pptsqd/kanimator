@@ -57,6 +57,36 @@ func insert_time(data):
 					if kfa_data[anim_name][node_name][attr_name].has(i):
 						kfa_data[anim_name][node_name][attr_name][i+num] = kfa_data[anim_name][node_name][attr_name][i]
 						kfa_data[anim_name][node_name][attr_name].erase(i)
+						
+func shift(data):
+	var num = int(data.num)
+	var kfa_data = GAME.keyframe_data
+	var anim_name = GAME.current_keyframe_animname
+	var list = [GAME.element_inspector.current_target.name]
+	var varlist = [GAME.element_inspector.current_target.name]
+	if data.all:
+		list = []
+		for element in GAME.build_holder.build_nodes:
+			list.append(element.name)
+	if data.all_vars:
+		varlist = GAME.attr_types
+	for node_name in list:
+		for attr_name in varlist:
+			if kfa_data and kfa_data.has(anim_name) and kfa_data[anim_name].has(node_name) and kfa_data[anim_name][node_name].has(attr_name):
+				if num > 0:
+					var from = kfa_data[anim_name]["numframes"]+200 # this is for saftey
+					var to = -200 # this is for saftey
+					for i in range(from, to, -1):
+						if kfa_data[anim_name][node_name][attr_name].has(i):
+							kfa_data[anim_name][node_name][attr_name][i+num] = kfa_data[anim_name][node_name][attr_name][i]
+							kfa_data[anim_name][node_name][attr_name].erase(i)
+				else:
+					var from = -200 
+					var to =  kfa_data[anim_name]["numframes"]+200
+					for i in range(from, to, 1):
+						if kfa_data[anim_name][node_name][attr_name].has(i):
+							kfa_data[anim_name][node_name][attr_name][i+num] = kfa_data[anim_name][node_name][attr_name][i]
+							kfa_data[anim_name][node_name][attr_name].erase(i)
 
 func erase_after(data):
 	var at = int(data.at)
@@ -108,3 +138,8 @@ func _on_kfa_del_before_pressed():
 
 func _on_kfa_del_after_pressed():
 	erase_after({"at" : GAME.keyframes_master.current_kfa_frame, "all" : kfa_pad_all.button_pressed, "all_vars" : %kfa_pad_vars.button_pressed})
+
+
+func _on_kfa_shift_pressed():
+	if %kfa_shift_num.text:
+		shift({"num" : %kfa_shift_num.text, "all" : kfa_pad_all.button_pressed, "all_vars" : %kfa_pad_vars.button_pressed})

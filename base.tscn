@@ -854,14 +854,20 @@ layout_mode = 2
 size_flags_horizontal = 9
 theme_override_constants/minimum_character_width = 2
 
-[node name="Label" type="Label" parent="kfBatchEditor/batch_editor/VBoxContainer/HBoxContainer3"]
-visible = false
+[node name="HBoxContainer5" type="HBoxContainer" parent="kfBatchEditor/batch_editor/VBoxContainer"]
+clip_contents = true
 layout_mode = 2
-text = "at"
 
-[node name="kfa_pad_at" type="LineEdit" parent="kfBatchEditor/batch_editor/VBoxContainer/HBoxContainer3"]
+[node name="kfa_shift" type="Button" parent="kfBatchEditor/batch_editor/VBoxContainer/HBoxContainer5"]
+layout_mode = 2
+text = "  shift   "
+
+[node name="Label2" type="Label" parent="kfBatchEditor/batch_editor/VBoxContainer/HBoxContainer5"]
+layout_mode = 2
+text = " n"
+
+[node name="kfa_shift_num" type="LineEdit" parent="kfBatchEditor/batch_editor/VBoxContainer/HBoxContainer5"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 size_flags_horizontal = 9
 theme_override_constants/minimum_character_width = 2
@@ -1522,6 +1528,7 @@ button_pressed = true
 [connection signal="pressed" from="kfBatchEditor/batch_editor/VBoxContainer/set_global_kf" to="keyframesEditor/keyframes_master" method="_on_set_global_kf_pressed"]
 [connection signal="text_submitted" from="kfBatchEditor/batch_editor/VBoxContainer/HBoxContainer2/kfa_batchEdit" to="kfBatchEditor/batch_editor" method="_on_kfa_batch_edit_text_submitted"]
 [connection signal="pressed" from="kfBatchEditor/batch_editor/VBoxContainer/HBoxContainer3/kfa_pad" to="kfBatchEditor/batch_editor" method="_on_kfa_pad_pressed"]
+[connection signal="pressed" from="kfBatchEditor/batch_editor/VBoxContainer/HBoxContainer5/kfa_shift" to="kfBatchEditor/batch_editor" method="_on_kfa_shift_pressed"]
 [connection signal="pressed" from="kfBatchEditor/batch_editor/VBoxContainer/HBoxContainer4/kfa_del_before" to="kfBatchEditor/batch_editor" method="_on_kfa_del_before_pressed"]
 [connection signal="pressed" from="kfBatchEditor/batch_editor/VBoxContainer/HBoxContainer4/kfa_del_after" to="kfBatchEditor/batch_editor" method="_on_kfa_del_after_pressed"]
 [connection signal="item_selected" from="animationsEditor/animation_master/VBoxContainer/HBoxContainer3/OptionButton" to="animationsEditor/animation_master" method="_on_baked_anim_selected"]
