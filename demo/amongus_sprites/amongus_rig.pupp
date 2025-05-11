@@ -1,1 +1,0 @@
-{"backpack":{"parent":"body"},"body":{"parent":"kanim_root"},"eye":{"parent":"body"},"hand_back":{"parent":"kanim_root"},"hand_weapon":{"parent":"weapon"},"weapon":{"parent":"hand_back"}}
