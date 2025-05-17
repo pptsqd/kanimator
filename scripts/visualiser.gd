@@ -99,7 +99,7 @@ func set_modifiers():
 	if attribute == "vis":
 		y_mod = size.y * 0.5
 		y_offset = size.y * 0.75
-		draw_line(Vector2(0, y_mod), Vector2(size.x, y_mod),  Color.DIM_GRAY) 
+		#draw_line(Vector2(0, y_mod), Vector2(size.x, y_mod),  Color.DIM_GRAY) 
 		# attr is binary so we can make this way easier to read; if val is above center-line it's on
 	elif attribute == "pos_y":
 		#gross but i'm manually flipping all pos_y values for UX reasons

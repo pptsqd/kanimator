@@ -42,7 +42,7 @@ func insert_time(data):
 	var kfa_data = GAME.keyframe_data
 	var anim_name = GAME.current_keyframe_animname
 	var list = [GAME.element_inspector.current_target.name]
-	var varlist = [GAME.element_inspector.current_target.name]
+	var varlist = [GAME.current_focus_attr]
 	if data.all:
 		list = []
 		for element in GAME.build_holder.build_nodes:
@@ -63,7 +63,7 @@ func shift(data):
 	var kfa_data = GAME.keyframe_data
 	var anim_name = GAME.current_keyframe_animname
 	var list = [GAME.element_inspector.current_target.name]
-	var varlist = [GAME.element_inspector.current_target.name]
+	var varlist = [GAME.current_focus_attr]
 	if data.all:
 		list = []
 		for element in GAME.build_holder.build_nodes:
@@ -88,12 +88,34 @@ func shift(data):
 							kfa_data[anim_name][node_name][attr_name][i+num] = kfa_data[anim_name][node_name][attr_name][i]
 							kfa_data[anim_name][node_name][attr_name].erase(i)
 
+func set_master_keyframe(data):
+	var at = int(data.at)
+	var kfa_data = GAME.keyframe_data
+	var anim_name = GAME.current_keyframe_animname
+	var list = [GAME.element_inspector.current_target.name]
+	var varlist = [GAME.current_focus_attr]
+	if data.all:
+		list = []
+		for element in GAME.build_holder.build_nodes:
+			list.append(element.name)
+	if data.all_vars:
+		varlist = GAME.attr_types
+	for node_name in list:
+		for attr_name in varlist:
+			var tosend = {"node_name" : node_name}
+			tosend[attr_name] = GAME.keyframe_inspector.get_blend_type()
+			print(tosend)
+			GAME.keyframes_master.set_keyframe(tosend)
+	
+	
+
+
 func erase_after(data):
 	var at = int(data.at)
 	var kfa_data = GAME.keyframe_data
 	var anim_name = GAME.current_keyframe_animname
 	var list = [GAME.element_inspector.current_target.name]
-	var varlist = [GAME.element_inspector.current_target.name]
+	var varlist = [GAME.current_focus_attr]
 	if data.all:
 		list = []
 		for element in GAME.build_holder.build_nodes:
@@ -107,6 +129,7 @@ func erase_after(data):
 				for i in range(from, at, -1):
 					if kfa_data[anim_name][node_name][attr_name].has(i):
 						kfa_data[anim_name][node_name][attr_name].erase(i)
+						
 func erase_before(data):
 	var at = int(data.at)
 	var kfa_data = GAME.keyframe_data
@@ -138,6 +161,9 @@ func _on_kfa_del_before_pressed():
 
 func _on_kfa_del_after_pressed():
 	erase_after({"at" : GAME.keyframes_master.current_kfa_frame, "all" : kfa_pad_all.button_pressed, "all_vars" : %kfa_pad_vars.button_pressed})
+
+func _on_kfa_global_pressed():
+	set_master_keyframe({"at" : GAME.keyframes_master.current_kfa_frame, "all" : kfa_pad_all.button_pressed, "all_vars" : %kfa_pad_vars.button_pressed})
 
 
 func _on_kfa_shift_pressed():

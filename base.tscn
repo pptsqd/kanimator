@@ -1525,7 +1525,7 @@ button_pressed = true
 [connection signal="pressed" from="keyframe_attrs/keyframe_inspector/VBoxContainer/HBoxContainer3/kf_next" to="keyframe_attrs/keyframe_inspector" method="_on_kf_next_pressed"]
 [connection signal="pressed" from="keyframe_attrs/keyframe_inspector/VBoxContainer/HBoxContainer2/kf_update" to="keyframe_attrs/keyframe_inspector" method="_on_kf_update_pressed"]
 [connection signal="pressed" from="keyframe_attrs/keyframe_inspector/VBoxContainer/HBoxContainer2/kf_delete" to="keyframe_attrs/keyframe_inspector" method="_on_kf_delete_pressed"]
-[connection signal="pressed" from="kfBatchEditor/batch_editor/VBoxContainer/set_global_kf" to="keyframesEditor/keyframes_master" method="_on_set_global_kf_pressed"]
+[connection signal="pressed" from="kfBatchEditor/batch_editor/VBoxContainer/set_global_kf" to="kfBatchEditor/batch_editor" method="_on_kfa_global_pressed"]
 [connection signal="text_submitted" from="kfBatchEditor/batch_editor/VBoxContainer/HBoxContainer2/kfa_batchEdit" to="kfBatchEditor/batch_editor" method="_on_kfa_batch_edit_text_submitted"]
 [connection signal="pressed" from="kfBatchEditor/batch_editor/VBoxContainer/HBoxContainer3/kfa_pad" to="kfBatchEditor/batch_editor" method="_on_kfa_pad_pressed"]
 [connection signal="pressed" from="kfBatchEditor/batch_editor/VBoxContainer/HBoxContainer5/kfa_shift" to="kfBatchEditor/batch_editor" method="_on_kfa_shift_pressed"]
