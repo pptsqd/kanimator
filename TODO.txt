@@ -1,9 +1,11 @@
 
-Try making a rig animation
-export KleiAnimBuild (KAB)
-<anim name="anim" for each sprite
-add layername to each sprite's elements
 
-maybe try dropdown for picking existing names based on elements (nck = 2591174623)
+add _01s for common duplicated objects (limbs)?
+add way to add +_01's
+add layer sorting (keyable??)
+TEST EXPORTS OF AGENTS
 
-try concatting anims / anims_1h with the new anim file
+add 'load GRP'
+
+additive anim exports? I wanna export imposter dragging without hassle
+add bake to kfas (don't need to clean up really)

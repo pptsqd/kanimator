@@ -46,11 +46,18 @@ func set_frame(n):
 
 func set_transforms_worldspace(frame_data):
 	#this updated version of set_transforms will ignore parenting information, allowing us to load existing anims onto rigs
-	var temp_transform = Transform2D(
+	var parent_transform = Transform2D(
+		Vector2(frame_data.m0_a, frame_data.m0_b),  # First column
+		Vector2(frame_data.m0_c, frame_data.m0_d),  # Second column
+		Vector2(frame_data.m0_tx, frame_data.m0_ty) # Translation
+	)
+	var child_transform = Transform2D(
 		Vector2(frame_data.m1_a, frame_data.m1_b),  # First column
 		Vector2(frame_data.m1_c, frame_data.m1_d),  # Second column
 		Vector2(frame_data.m1_tx, frame_data.m1_ty) # Translation
 	)
+	
+	var temp_transform = parent_transform * child_transform #seems this is all you need to combine transforms
 	global_transform = temp_transform  # since the scene is rendered through rendercam I don't need to do clever stuff!
 	set_frame(frame_data.frame)
 	#oh no i regret saying I dont need to do clever stuff...
@@ -70,10 +77,10 @@ func propagate_baked_world(frame_data, its):
 	if frame_data.has(name):
 		animated_sprite.visible = true
 		sprite_visible = true
-		if frame_data[name].parentname != "":
-			set_transforms(frame_data[name]) #we can assume that the user will set the rig correctly
-		else:
-			set_transforms_worldspace(frame_data[name])
+		#if frame_data[name].parentname != "":
+		#	set_transforms(frame_data[name]) #we can assume that the user will set the rig correctly
+		#else:
+		set_transforms_worldspace(frame_data[name]) # now adding the parent transforms in directly
 	else:
 		animated_sprite.visible = false #this being on the sprite allows the children to be seen (but not heard)
 		sprite_visible = false

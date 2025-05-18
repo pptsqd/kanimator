@@ -122,7 +122,13 @@ func import_animation(file_path: String):
 					"m1_c": 0.0,
 					"m1_d": 0.0,
 					"m1_tx": 0.0,
-					"m1_ty": 0.0
+					"m1_ty": 0.0,
+					"m0_a": 0.0, #parent transforms, ty cy!
+					"m0_b": 0.0,
+					"m0_c": 0.0,
+					"m0_d": 0.0,
+					"m0_tx": 0.0,
+					"m0_ty": 0.0
 				}
 
 				# Extract all attributes of the "element" node
@@ -152,6 +158,18 @@ func import_animation(file_path: String):
 							element_data["m1_tx"] = attr_value.to_float()
 						"m1_ty":
 							element_data["m1_ty"] = attr_value.to_float()
+						"m0_a":
+							element_data["m0_a"] = attr_value.to_float()
+						"m0_b":
+							element_data["m0_b"] = attr_value.to_float()
+						"m0_c":
+							element_data["m0_c"] = attr_value.to_float()
+						"m0_d":
+							element_data["m0_d"] = attr_value.to_float()
+						"m0_tx":
+							element_data["m0_tx"] = attr_value.to_float()
+						"m0_ty":
+							element_data["m0_ty"] = attr_value.to_float()
 				
 				#this is messy but I guess it's one less value i'm storing
 				anim_data[anim_name]["frames"][current_processed_frame][element_data.name] = element_data
