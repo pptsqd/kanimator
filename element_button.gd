@@ -38,3 +38,17 @@ func update_parent():
 	parent_selector.select(id)
 	GAME.build_holder.build_node_dict[target_node.name].node.change_rig_parent(GAME.build_holder.build_node_dict[to_parent].node)
 	#SO. I have a dict that points us to the build nodes, im using that here.
+
+
+func _on_duplicate_pressed():
+	var old_name = target_node.name
+	var new_name = target_node.name
+	var suffix = old_name.substr(old_name.length() - 2, 2)
+	if int(suffix) == 00:
+		var number = int(suffix) + 1
+		var new_suffix = "%02d" % number
+		new_name = old_name.substr(0, old_name.length() - 2) + str(new_suffix)
+	else:
+		new_name = old_name + "_01"
+	print(new_name)
+	GAME.build_holder.duplicate_kanimsprite(target_node, new_name)

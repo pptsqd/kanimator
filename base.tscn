@@ -188,6 +188,17 @@ access = 2
 filters = PackedStringArray("*animation.xml", "*.xml")
 use_native_dialog = true
 
+[node name="SaveGifDialogue" type="FileDialog" parent="."]
+unique_name_in_owner = true
+auto_translate_mode = 1
+initial_position = 1
+size = Vector2i(600, 300)
+ok_button_text = "Save"
+dialog_hide_on_ok = true
+access = 2
+filters = PackedStringArray("*.gif")
+use_native_dialog = true
+
 [node name="exportKABDialogue" type="FileDialog" parent="."]
 unique_name_in_owner = true
 auto_translate_mode = 1
@@ -248,6 +259,7 @@ filters = PackedStringArray("*_kfa.pupp", "*.json")
 use_native_dialog = true
 
 [node name="SubViewport" type="SubViewport" parent="."]
+unique_name_in_owner = true
 disable_3d = true
 transparent_bg = true
 size = Vector2i(1024, 1024)
@@ -991,6 +1003,23 @@ text = "Bake crr KFA"
 layout_mode = 2
 text = "Bake all KFA"
 
+[node name="Control" type="Control" parent="animationsEditor/animation_master/VBoxContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="animationsEditor/animation_master/VBoxContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="animationsEditor/animation_master/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+text = "save gif"
+
+[node name="gifscale" type="LineEdit" parent="animationsEditor/animation_master/VBoxContainer/HBoxContainer4"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0.5"
+placeholder_text = "scale"
+
 [node name="keyframesEditor" type="Window" parent="."]
 auto_translate_mode = 1
 title = "Keyframe Animations"
@@ -1318,7 +1347,8 @@ theme_override_icons/close_pressed = ExtResource("6_kt164")
 script = ExtResource("6_vu4yg")
 base_position = Vector2(1, 4)
 
-[node name="Panel" type="Panel" parent="kanimaViewer"]
+[node name="kanimviewBackdrop" type="Panel" parent="kanimaViewer"]
+unique_name_in_owner = true
 z_index = -100
 anchors_preset = 15
 anchor_right = 1.0
@@ -1343,7 +1373,8 @@ anchors_preset = 0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="viewport" type="Sprite2D" parent="kanimaViewer/Control/Control"]
+[node name="kanimviewerViewport" type="Sprite2D" parent="kanimaViewer/Control/Control"]
+unique_name_in_owner = true
 texture = SubResource("ViewportTexture_qay1j")
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="kanimaViewer"]
@@ -1506,6 +1537,7 @@ button_pressed = true
 [connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]
 [connection signal="file_selected" from="AnimDialogue" to="." method="_on_anim_dialogue_file_selected"]
 [connection signal="file_selected" from="SaveDialogue" to="animationsEditor/animation_master" method="_on_save_dialogue_file_selected"]
+[connection signal="file_selected" from="SaveGifDialogue" to="animationsEditor/animation_master" method="_on_save_gif_dialogue_file_selected"]
 [connection signal="file_selected" from="exportKABDialogue" to="." method="_on_export_kab_dialogue_file_selected"]
 [connection signal="file_selected" from="SaveRigDialogue" to="." method="_on_save_rig_dialogue_file_selected"]
 [connection signal="file_selected" from="LoadRigDialogue" to="." method="_on_load_rig_dialogue_file_selected"]
@@ -1538,6 +1570,7 @@ button_pressed = true
 [connection signal="pressed" from="animationsEditor/animation_master/VBoxContainer/kf_controls/baked_play" to="animationsEditor/animation_master" method="_on_baked_play_pressed"]
 [connection signal="pressed" from="animationsEditor/animation_master/VBoxContainer/HBoxContainer/bake_anim" to="animationsEditor/animation_master" method="_on_bake_anim_pressed"]
 [connection signal="pressed" from="animationsEditor/animation_master/VBoxContainer/HBoxContainer/bake_anim2" to="animationsEditor/animation_master" method="_on_bake_all_pressed"]
+[connection signal="pressed" from="animationsEditor/animation_master/VBoxContainer/HBoxContainer4/Button" to="animationsEditor/animation_master" method="_on_create_gif_pressed"]
 [connection signal="pressed" from="keyframesEditor/keyframes_master/Apply" to="keyframesEditor/keyframes_master" method="_on_apply_pressed"]
 [connection signal="item_selected" from="keyframesEditor/keyframes_master/VBoxContainer/HBoxContainer3/keyframeanim_selector" to="keyframesEditor/keyframes_master" method="_on_keyframeanim_selector_item_selected"]
 [connection signal="text_submitted" from="keyframesEditor/keyframes_master/VBoxContainer/HBoxContainer3/newAnimName" to="keyframesEditor/keyframes_master" method="_on_new_animname_text_submitted"]

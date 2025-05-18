@@ -52,6 +52,8 @@ func import_animation(file_path: String):
 	var anim_data = {}
 	var xml = XMLParser.new()
 	
+	var current_z = 0
+	
 	var anim_name = "" #storing this, it will get updated each pass.
 	var current_processed_frame = "" #storing a str seems to work better than an int
 
@@ -109,6 +111,7 @@ func import_animation(file_path: String):
 					anim_data[anim_name].firstframe = current_processed_frame
 				#it'd probably be nicer to store this element > frame but we'll match the file format for ease of translation later
 				anim_data[anim_name]["frames"][current_processed_frame] = {}
+				current_z = 0
 
 			"element":
 				var element_data = {
@@ -130,7 +133,9 @@ func import_animation(file_path: String):
 					"m0_tx": 0.0,
 					"m0_ty": 0.0
 				}
-
+				var last_layername = ""
+				var last_parentname = ""
+				var last_shortname = ""
 				# Extract all attributes of the "element" node
 				for i in range(xml.get_attribute_count()):
 					var attr_name = xml.get_attribute_name(i)
@@ -171,8 +176,31 @@ func import_animation(file_path: String):
 						"m0_ty":
 							element_data["m0_ty"] = attr_value.to_float()
 				
-				#this is messy but I guess it's one less value i'm storing
-				anim_data[anim_name]["frames"][current_processed_frame][element_data.name] = element_data
+				#skipping duplicates
+				if last_layername == element_data.layername and last_parentname == element_data.parentname:
+					last_layername = element_data.layername
+					last_parentname = element_data.parentname
+					if anim_data[anim_name]["frames"][current_processed_frame].has(element_data.name):
+						return
+				last_layername = element_data.layername
+				last_parentname = element_data.parentname
+				last_shortname = element_data.name.substr(0, element_data.name.length() - 2)
+				element_data["z"] = current_z
+				current_z += 1
+				#this is messy. I'm adding 1 to existing names, this will only work if max copies are 2
+				if anim_data[anim_name]["frames"][current_processed_frame].has(element_data.name):
+					var old_name = element_data.name
+					var suffix = old_name.substr(old_name.length() - 2, 2)
+					if int(suffix) == 00:
+						var number = int(suffix) + 1
+						var new_suffix = "%02d" % number
+						var new_name = old_name.substr(0, old_name.length() - 2) + str(new_suffix)
+						anim_data[anim_name]["frames"][current_processed_frame][new_name] = element_data
+						#print(new_name)
+					else:
+						anim_data[anim_name]["frames"][current_processed_frame][element_data.name + "_01"] = element_data
+				else:
+					anim_data[anim_name]["frames"][current_processed_frame][element_data.name] = element_data
 
 	GAME.animation_data = anim_data
 	print("Animation data imported successfully")
@@ -273,6 +301,9 @@ func _on_baked_play_pressed():
 		
 
 var baking = false
+var giffing = false
+var giffing_load_phase = true
+var gif_frames = []
 var baking_flipped = false
 var bake_frame = 0
 var bake_length = 0
@@ -320,8 +351,24 @@ func save_bakes():
 	if baking_flipped and bake_flipped_list.size() == 0:
 		baking_flipped = false
 		%baker_flip.scale.x = 1
-
-
+		
+		
+const GIFExporter = preload("res://gdgifexporter/exporter.gd")
+const MedianCutQuantization = preload("res://gdgifexporter/quantization/median_cut.gd")
+@onready var exporter : RefCounted = GIFExporter.new(1280, 1280)
+func build_gif():
+	var curr = 0
+	if gif_frames.size() > 0:
+		# loop through the frames list
+		for frame in gif_frames:
+			curr += 1
+			# get the image and delta from the frame
+			DisplayServer.window_set_title("Rendering frame: " + str(curr) + "/" + str(gif_frames.size())) 
+			var image = frame[0]
+			var delta =  1.0 / frame_rate
+			# add the image as a frame to the exporter object using median cut quantization method
+			exporter.add_frame(image, delta, MedianCutQuantization)
+		%SaveGifDialogue.popup()
 
 func _process(delta):
 	if baking:
@@ -332,6 +379,25 @@ func _process(delta):
 			baking = false
 			save_bakes()
 			set_options()
+	if giffing:
+		if giffing_load_phase:
+			GAME.build_holder.load_frame(anim_list[current_anim], bake_frame)
+			var viewport_texture = %kanimviewerViewport.texture
+			var image = viewport_texture.get_image()
+		if bake_frame < bake_length:
+			#var viewport_texture = get_viewport().get_texture()
+			var viewport_texture = %kanimviewerViewport.texture
+			var image = viewport_texture.get_image()
+			image.convert(Image.FORMAT_RGBA8)
+			image.resize(%kanimviewBackdrop.size.x * float(%gifscale.text), %kanimviewBackdrop.size.y * float(%gifscale.text))
+			var framedelta = (floor(100*(1.0 / frame_rate)))*0.01
+			gif_frames.append([image, framedelta])
+			bake_frame += 1
+			
+			DisplayServer.window_set_title("Capturing: " + str(bake_frame) + "/" + str(bake_length) )
+		else:
+			giffing = false
+			build_gif()
 	else:
 		if bake_list.size() > 0 and not baking:
 			GAME.keyframes_master.change_kfanim(bake_list.pop_front())
@@ -340,7 +406,7 @@ func _process(delta):
 			baking_flipped = true
 			GAME.keyframes_master.change_kfanim(bake_flipped_list.pop_front())
 			bake_kfa()
-		if playing:
+		elif playing:
 			playing_delta += delta
 			if playing_delta > (1.0/frame_rate):
 				set_baked_frame(current_frame+1)
@@ -386,3 +452,23 @@ func _on_bake_all_pressed():
 	for name in GAME.keyframe_data:
 		queue_anim_bake(name)
 		
+
+func _on_save_gif_dialogue_file_selected(path):
+	var file: FileAccess = FileAccess.open(path, FileAccess.WRITE)
+	# save data stream into file
+	file.store_buffer(exporter.export_file_data())
+	# close the file
+	file.close()
+	DisplayServer.window_set_title("KANIMator")
+
+
+func _on_create_gif_pressed():
+	%SubViewport.size = %kanimviewBackdrop.size
+	gif_frames = []
+	exporter = GIFExporter.new(%kanimviewBackdrop.size.x * float(%gifscale.text), %kanimviewBackdrop.size.y * float(%gifscale.text))
+	bake_length = frame_count
+	bake_frame = 0
+	set_baked_frame(0)
+	GAME.build_holder.load_frame(anim_list[current_anim], bake_frame)
+	giffing = true
+	giffing_load_phase = true

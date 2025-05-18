@@ -68,6 +68,7 @@ func parse_symbol_frames(xml: XMLParser, sprite: KANIMSprite, image_directory: S
 			var image_path = "%s\\%s.png" % [image_directory, image_file]
 			var image = Image.new()
 			image.premultiply_alpha() #hopefully lose the dark outlines
+			image.fix_alpha_edges()
 			if image.load(image_path) == OK:
 				var texture = ImageTexture.new()
 				texture.set_image(image)
@@ -75,6 +76,25 @@ func parse_symbol_frames(xml: XMLParser, sprite: KANIMSprite, image_directory: S
 				sprite.add_frame(sprite_data)
 				#some eles have many frames, so i'm appending them here
 
+func duplicate_kanimsprite(original_node, new_name):
+	var new_animated_sprite = KANIMSprite.new()
+	build_node_dict[new_name] = {"node" : new_animated_sprite, "id" : build_nodes.size()}
+	build_nodes.append(new_animated_sprite)
+	animations_node.add_child(new_animated_sprite)
+	animations_node.move_child(new_animated_sprite, 0) #reordering so the new item is on top
+	new_animated_sprite.name = new_name
+	new_animated_sprite.build_holder = self
+	new_animated_sprite.z_index = 0-build_nodes.size()  #this will let us mess about with parenting
+	if GAME.rig_data.has(new_name):
+		pass
+	else:
+		GAME.rig_data[new_name] = {"parent" : animations_node.name}  #adding the rig here just in case
+	var spritedata = original_node.frames_info
+	for i in spritedata:
+		new_animated_sprite.add_frame(i)
+	new_animated_sprite.set_frame(0)
+	var data = {"name" = new_name, "node" = new_animated_sprite}
+	GAME.element_selector.add_button(data)
 
 func load_frame(anim_name, idx):
 	#format is anim_data[anim_name]["frames"][current_processed_frame][element_data.name] = {name layername parentname frame depth m1_a m1_b m1_c m1_d m1_tx m1_ty}

@@ -42,5 +42,15 @@ offset_right = 275.0
 offset_bottom = 38.0
 fit_to_longest_item = false
 
+[node name="duplicate" type="Button" parent="."]
+layout_mode = 0
+offset_left = 331.0
+offset_top = 8.0
+offset_right = 411.0
+offset_bottom = 39.0
+text = "duplicate
+"
+
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
 [connection signal="item_selected" from="OptionButton" to="." method="_on_parent_selector_item_selected"]
+[connection signal="pressed" from="duplicate" to="." method="_on_duplicate_pressed"]

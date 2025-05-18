@@ -60,6 +60,9 @@ func set_transforms_worldspace(frame_data):
 	var temp_transform = parent_transform * child_transform #seems this is all you need to combine transforms
 	global_transform = temp_transform  # since the scene is rendered through rendercam I don't need to do clever stuff!
 	set_frame(frame_data.frame)
+	if frame_data.has("z"):
+		z_index = GAME.build_holder.build_nodes.size() - frame_data["z"]
+		#print(z_index)
 	#oh no i regret saying I dont need to do clever stuff...
 	if false and scale.y < 0 and (rotation_degrees > 90 or rotation_degrees < -90):
 		#turns out you can't -1*scaleX in transforms, so i'm gonna brute force it back into place here!
@@ -96,6 +99,7 @@ func set_sprite_vis(val):
 func get_baked_transforms():
 	var result = {}
 	#[X: (1, 0), Y: (0, 1), O: (0.05, 0)]
+	var blank_transform = Transform2D.IDENTITY
 	if sprite_visible:
 		#i'm not sure why these are labeled as they are but they seem to work
 		result["m1_tx"] = global_transform.origin.x
@@ -104,6 +108,12 @@ func get_baked_transforms():
 		result["m1_b"] = global_transform.x.y
 		result["m1_c"] = global_transform.y.x
 		result["m1_d"] = global_transform.y.y
+		result["m0_tx"] = blank_transform.origin.x
+		result["m0_ty"] = blank_transform.origin.y
+		result["m0_a"] = blank_transform.x.x
+		result["m0_b"] = blank_transform.x.y
+		result["m0_c"] = blank_transform.y.x
+		result["m0_d"] = blank_transform.y.y
 		result["frame"] = frame
 		result["name"] = name
 		result["parentname"] = ""
