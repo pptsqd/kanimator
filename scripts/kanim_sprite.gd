@@ -11,6 +11,11 @@ var numframes : int = 0
 var rig_parent : Node
 var element_button : Element_Button
 var sprite_visible = true
+var colour : Color = Color.GREEN
+var kanim_rendercam
+var offset = Vector2.ZERO
+
+var draw_layer : Node2D
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -20,6 +25,10 @@ func _ready():
 	#we need blank sprite frames to load onto so i'm making it automatically
 	rig_parent = GAME.build_holder
 	z_as_relative = false
+	draw_layer = DEBUG_DRAWER.new()
+	draw_layer.kanim_sprite = self
+	draw_layer.animated_sprite = animated_sprite
+	add_child(draw_layer)
 
 func change_rig_parent(new_parent):
 	rig_parent.remove_child(self)
@@ -37,8 +46,9 @@ func set_frame(n):
 		return false
 	frame = n
 	animated_sprite.frame = n
-	var offset = Vector2(float(frames_info[n].x), float(frames_info[n].y))
+	offset = Vector2(float(frames_info[n].x), float(frames_info[n].y))
 	animated_sprite.position = offset
+	#animated_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	return true
 
 
@@ -94,6 +104,7 @@ func propagate_baked_world(frame_data, its):
 func set_sprite_vis(val):
 	animated_sprite.visible = val
 	sprite_visible = val
+	
 	
 
 func get_baked_transforms():
@@ -152,3 +163,32 @@ func set_from_kfa(frame_num, anim_name):
 			set_frame( int(round(GAME.keyframes_master.get_kfa_data(name, "idx", frame_num))) )
 		if GAME.keyframe_data[anim_name][name].has("vis"):
 			set_sprite_vis( bool(round(GAME.keyframes_master.get_kfa_data(name, "vis", frame_num))) )
+
+
+
+
+
+
+func _draw():
+	var current_animation : String = animated_sprite.animation
+	var line_size = -1
+	var local_colour = colour
+	#local_colour.a = 0.5
+	#line_size += (2 - kanim_rendercam.zoom.x)*2 #scale to the camera
+	#animated_sprite.modulate = Color(1,1,1,1)
+	#animated_sprite.modulate = Color(0,1,1,0)
+	if build_holder.draw_debug:
+		if animated_sprite.visible and animated_sprite.sprite_frames:
+			var sprite_texture : Texture = animated_sprite.sprite_frames.get_frame_texture(current_animation,frame)
+			var size = sprite_texture.get_size()*0.5
+			draw_line(offset + Vector2(size.x, size.y), offset + Vector2(-size.x, size.y), local_colour, line_size)
+			draw_line(offset + Vector2(-size.x, size.y), offset + Vector2(-size.x, -size.y), local_colour, line_size)
+			draw_line(offset + Vector2(-size.x, -size.y), offset + Vector2(size.x, -size.y), local_colour, line_size)
+			draw_line(offset + Vector2(size.x, -size.y), offset + Vector2(size.x, size.y), local_colour, line_size)
+			#draw_circle(Vector2.ZERO,1.5,local_colour,true,-1,false)
+			#draw_circle(Vector2.ZERO,2,Color.BLACK,false,-1,false)
+			#draw_circle(Vector2.ZERO,2,kanim_sprite.colour,false,1,false)
+
+
+func _process(delta):
+	queue_redraw()

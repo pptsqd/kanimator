@@ -191,10 +191,12 @@ use_native_dialog = true
 [node name="SaveGifDialogue" type="FileDialog" parent="."]
 unique_name_in_owner = true
 auto_translate_mode = 1
+title = "Open a Directory"
 initial_position = 1
 size = Vector2i(600, 300)
-ok_button_text = "Save"
+ok_button_text = "Select Current Folder"
 dialog_hide_on_ok = true
+file_mode = 2
 access = 2
 filters = PackedStringArray("*.gif")
 use_native_dialog = true
@@ -1494,10 +1496,11 @@ offset_right = -4.0
 offset_bottom = -25.0
 grow_horizontal = 0
 grow_vertical = 2
-max_value = 150.0
+min_value = 50.0
+max_value = 300.0
 step = 5.0
 value = 50.0
-tick_count = 4
+tick_count = 6
 ticks_on_borders = true
 
 [node name="show_bounds" type="CheckBox" parent="kanimaViewer"]
@@ -1525,6 +1528,18 @@ offset_bottom = 24.0
 grow_horizontal = 0
 focus_mode = 0
 button_pressed = true
+
+[node name="show_spritebounds" type="CheckBox" parent="kanimaViewer"]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.396078)
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -65.0
+offset_right = -41.0
+offset_bottom = 24.0
+grow_horizontal = 0
+focus_mode = 0
 
 [connection signal="pressed" from="HBoxContainer/Button" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/Button2" to="." method="_on_load_anims_pressed"]

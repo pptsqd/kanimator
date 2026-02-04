@@ -387,17 +387,19 @@ func _process(delta):
 		if bake_frame < bake_length:
 			#var viewport_texture = get_viewport().get_texture()
 			var viewport_texture = %kanimviewerViewport.texture
-			var image = viewport_texture.get_image()
-			image.convert(Image.FORMAT_RGBA8)
-			image.resize(%kanimviewBackdrop.size.x * float(%gifscale.text), %kanimviewBackdrop.size.y * float(%gifscale.text))
+			var image : Image = viewport_texture.get_image()
+			#image.convert(Image.FORMAT_RGBA8)
+			#image.resize(%kanimviewBackdrop.size.x * float(%gifscale.text), %kanimviewBackdrop.size.y * float(%gifscale.text))
 			var framedelta = (floor(100*(1.0 / frame_rate)))*0.01
+			image.save_png( str(%gifscale.text) + "_" + str(anim_list[current_anim]) + "_" + str(bake_frame).pad_zeros(3) + ".png")
 			gif_frames.append([image, framedelta])
 			bake_frame += 1
+			
 			
 			DisplayServer.window_set_title("Capturing: " + str(bake_frame) + "/" + str(bake_length) )
 		else:
 			giffing = false
-			build_gif()
+			#build_gif()
 	else:
 		if bake_list.size() > 0 and not baking:
 			GAME.keyframes_master.change_kfanim(bake_list.pop_front())
@@ -454,13 +456,15 @@ func _on_bake_all_pressed():
 		
 
 func _on_save_gif_dialogue_file_selected(path):
-	var file: FileAccess = FileAccess.open(path, FileAccess.WRITE)
-	# save data stream into file
-	file.store_buffer(exporter.export_file_data())
-	# close the file
-	file.close()
-	DisplayServer.window_set_title("KANIMator")
+	save_dir = path
+	#var file: FileAccess = FileAccess.open(path, FileAccess.WRITE)
+	## save data stream into file
+	#file.store_buffer(exporter.export_file_data())
+	## close the file
+	#file.close()
+	#DisplayServer.window_set_title("KANIMator")
 
+var save_dir = ""
 
 func _on_create_gif_pressed():
 	%SubViewport.size = %kanimviewBackdrop.size
@@ -470,5 +474,6 @@ func _on_create_gif_pressed():
 	bake_frame = 0
 	set_baked_frame(0)
 	GAME.build_holder.load_frame(anim_list[current_anim], bake_frame)
+	#%SaveGifDialogue.popup()
 	giffing = true
 	giffing_load_phase = true

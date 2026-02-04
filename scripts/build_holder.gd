@@ -5,9 +5,13 @@ var animations_node = self #nicer name, could be used to move targ later
 var build_nodes = []
 var build_node_dict = {}
 
+var color_inc = 0
+var draw_debug : bool = false
+
 func import_build(file: String, image_directory: String) -> void:
 	GAME.element_inspector.current_target = null
 	build_nodes = []
+	color_inc = 0
 	build_node_dict = {"kanim_root" : {"node":GAME.build_holder}}
 	for child in get_children(): #cull the kids
 		remove_child(child)
@@ -33,22 +37,43 @@ func import_build(file: String, image_directory: String) -> void:
 				for i in range(xml.get_attribute_count()):
 					if xml.get_attribute_name(i) == "name":
 						symbol_name = xml.get_attribute_value(i)
-
-				var animated_sprite = KANIMSprite.new()
-				build_node_dict[symbol_name] = {"node" : animated_sprite, "id" : build_nodes.size()}
-				build_nodes.append(animated_sprite)
-				animations_node.add_child(animated_sprite)
-				animations_node.move_child(animated_sprite, 0) #reordering so the new item is on top
-				animated_sprite.name = symbol_name
-				animated_sprite.build_holder = self
-				animated_sprite.z_index = 0-build_nodes.size()  #this will let us mess about with parenting
-				if GAME.rig_data.has(symbol_name):
-					pass
+				var skip_fix = false
+				
+				if ["hat", "har", "fac", "alr", "aur", "cst", "her", "abs", "cal", "nck", "hip", "lur", "llr", "ftr"].has(symbol_name.left(3)) and symbol_name.right(3) != "_00":
+					skip_fix = true
+					
+				if skip_fix:
+					while xml.read() == OK:
+					# Break out of the loop if we encounter a closing "Symbol" tag
+						if xml.get_node_type() == XMLParser.NODE_ELEMENT_END and xml.get_node_name() == "Symbol":
+							break
+						
+						# each element has frames, we'll parse through them here
+						if xml.get_node_name() == "Frame":
+							var frame_data = {}
 				else:
-					GAME.rig_data[symbol_name] = {"parent" : animations_node.name}  #adding the rig here just in case
+					var animated_sprite = KANIMSprite.new()
+					build_node_dict[symbol_name] = {"node" : animated_sprite, "id" : build_nodes.size()}
+					build_nodes.append(animated_sprite)
+					animations_node.add_child(animated_sprite)
+					animations_node.move_child(animated_sprite, 0) #reordering so the new item is on top
+					animated_sprite.name = symbol_name
+					animated_sprite.build_holder = self
+					animated_sprite.z_index = 0-build_nodes.size()  #this will let us mess about with parenting
+					if GAME.rig_data.has(symbol_name):
+						pass
+					else:
+						GAME.rig_data[symbol_name] = {"parent" : animations_node.name}  #adding the rig here just in case
 
-				parse_symbol_frames(xml, animated_sprite, image_directory)
-				animated_sprite.set_frame(0)
+					parse_symbol_frames(xml, animated_sprite, image_directory)
+					animated_sprite.set_frame(0)
+					animated_sprite.kanim_rendercam = %kanim_rendercam
+					animated_sprite.colour = Color.from_hsv(color_inc,.5,1,1)
+					color_inc = fmod(color_inc+0.07,1)
+					 # we still need to parse the symbols it seems
+					if ["ftr_clr_00","llr_clr_00","lur_clr_00","her_clr_00","alr_clr_00","aur_clr_00"].has(symbol_name):
+						var new_name = symbol_name.left(8) + "01"
+						duplicate_kanimsprite(animated_sprite, new_name)
 
 # Function to parse frames within a Symbol
 func parse_symbol_frames(xml: XMLParser, sprite: KANIMSprite, image_directory: String) -> void:
@@ -95,8 +120,11 @@ func duplicate_kanimsprite(original_node, new_name):
 	new_animated_sprite.set_frame(0)
 	var data = {"name" = new_name, "node" = new_animated_sprite}
 	GAME.element_selector.add_button(data)
+	new_animated_sprite.colour = Color.from_hsv(color_inc,.5,1,1)
+	color_inc = fmod(color_inc+0.07,1)
 
 func load_frame(anim_name, idx):
+	draw_debug = %show_spritebounds.button_pressed
 	#format is anim_data[anim_name]["frames"][current_processed_frame][element_data.name] = {name layername parentname frame depth m1_a m1_b m1_c m1_d m1_tx m1_ty}
 	idx = fmod(float(idx),float(GAME.animation_data[anim_name].numframes)) #for saftey, we cap the idx and numframes
 	idx = str(int(idx) + int(GAME.animation_data[anim_name].firstframe))
