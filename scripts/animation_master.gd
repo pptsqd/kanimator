@@ -385,6 +385,7 @@ func _process(delta):
 			var viewport_texture = %kanimviewerViewport.texture
 			var image = viewport_texture.get_image()
 		if bake_frame < bake_length:
+			GAME.build_holder.load_frame(anim_list[current_anim], bake_frame)
 			#var viewport_texture = get_viewport().get_texture()
 			var viewport_texture = %kanimviewerViewport.texture
 			var image : Image = viewport_texture.get_image()

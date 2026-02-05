@@ -68,8 +68,13 @@ func import_build(file: String, image_directory: String) -> void:
 					parse_symbol_frames(xml, animated_sprite, image_directory)
 					animated_sprite.set_frame(0)
 					animated_sprite.kanim_rendercam = %kanim_rendercam
-					animated_sprite.colour = Color.from_hsv(color_inc,.5,1,1)
-					color_inc = fmod(color_inc+0.07,1)
+					var colour_gen = 0
+					for letteri in symbol_name.length():
+						colour_gen += symbol_name.unicode_at(letteri) 
+					colour_gen = colour_gen * 0.7
+					colour_gen = fmod(colour_gen, 1.0)
+					animated_sprite.colour = Color.from_hsv(colour_gen,.5,1,1)
+					#color_inc = fmod(color_inc+0.07,1)
 					 # we still need to parse the symbols it seems
 					if ["ftr_clr_00","llr_clr_00","lur_clr_00","her_clr_00","alr_clr_00","aur_clr_00"].has(symbol_name):
 						var new_name = symbol_name.left(8) + "01"
@@ -120,8 +125,12 @@ func duplicate_kanimsprite(original_node, new_name):
 	new_animated_sprite.set_frame(0)
 	var data = {"name" = new_name, "node" = new_animated_sprite}
 	GAME.element_selector.add_button(data)
-	new_animated_sprite.colour = Color.from_hsv(color_inc,.5,1,1)
-	color_inc = fmod(color_inc+0.07,1)
+	var colour_gen = 0
+	for letteri in new_name.length():
+		colour_gen += new_name.unicode_at(letteri) 
+	colour_gen = colour_gen * 0.7
+	colour_gen = fmod(colour_gen+0.5, 1.0)
+	new_animated_sprite.colour = Color.from_hsv(colour_gen,.5,1,1)
 
 func load_frame(anim_name, idx):
 	draw_debug = %show_spritebounds.button_pressed

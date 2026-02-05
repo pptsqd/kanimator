@@ -1018,6 +1018,7 @@ text = "save gif"
 
 [node name="gifscale" type="LineEdit" parent="animationsEditor/animation_master/VBoxContainer/HBoxContainer4"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
 text = "0.5"
 placeholder_text = "scale"
