@@ -17,7 +17,7 @@ func _ready():
 
 @onready var tile = %tile
 @onready var portrait_bounds = %portrait_bounds
-# Called every frame. 'delta' is the elapsed time since the previous frame.
+
 func _process(delta):
 	portrait_bounds.visible = %show_bounds.button_pressed
 	tile.visible = %show_tile.button_pressed
